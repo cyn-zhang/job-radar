@@ -43,7 +43,8 @@ Works for any career level (intern → lead), any industry, any location.
 ```bash
 git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup
 # drop your CV into profile/
-claude .    # open in Claude Code → /job-scan
+# create config.yaml and replace the example values with your personal details (see config.example.yaml)
+claude .    # open in Claude Code → job commands like job-digest or message like 'send me daily job digest email"
 ```
 
 **Global install** — `/job-*` commands available in every Claude Code project:
@@ -55,7 +56,8 @@ git clone https://github.com/cyn-zhang/job-radar ~/.claude/skills/job-radar
 > Want commands in one specific project only?
 > ```bash
 > git clone https://github.com/cyn-zhang/job-radar ~/.claude/skills/job-radar
-> ~/.claude/skills/job-radar/setup --install ~/Projects/my-project
+> ~/.claude/skills/job-radar/setup --install ~/path-to/my-project
+> 
 > ```
 
 **Package for sharing** — creates `job-radar-skill.zip`
