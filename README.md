@@ -33,7 +33,7 @@ Works for any career level (intern → lead), any industry, any location.
 |----------|---------------|
 | **claude.ai** | Projects → New Project → Set project instructions |
 | **Claude desktop** | Projects → New Project → Set project instructions |
-| **Codex / other** | System prompt or assistant instructions |
+| **Cowork / other** | System prompt or assistant instructions |
 
 ---
 
