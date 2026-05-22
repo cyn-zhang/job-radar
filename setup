@@ -36,9 +36,9 @@ install_commands() {
   local COUNT=0
   for f in "$COMMANDS_SRC"/*.md; do
     fname="$(basename "$f")"
-    # Rewrite relative paths → absolute paths pointing to this skill install
+    # Rewrite SKILL.md path to absolute; config uses priority lookup (see SKILL.md Step 0)
     sed \
-      "s|from config\.yaml|from $SKILL_DIR/config.yaml|g; \
+      "s|from config\.yaml|from ./config.yaml (project-local) or $SKILL_DIR/config.yaml (global fallback)|g; \
        s|in SKILL\.md|in $SKILL_DIR/SKILL.md|g" \
       "$f" > "$TARGET_COMMANDS/$fname"
     COUNT=$((COUNT + 1))

@@ -19,7 +19,12 @@ No hardcoded values in this file — everything is a variable.
 
 ## Step 0 — Always Load Config First
 
-At the start of every session, read `config.yaml` from the skill directory and extract:
+Locate `config.yaml` by checking these paths in order — use the first one found:
+
+1. `./config.yaml` — current working directory (project-local config takes priority)
+2. `~/.claude/skills/job-radar/config.yaml` — global fallback
+
+Extract:
 
 ```
 {name}              ← hunter.name
@@ -680,7 +685,7 @@ If tracker doesn't exist: "No applications tracked yet. Say 'I applied to [compa
 
 ## General Guidelines
 
-- **Load config first** — never assume values; always read from `config.yaml`
+- **Load config first** — check `./config.yaml` (project) then `~/.claude/skills/job-radar/config.yaml` (global); never assume values
 - **Check for stale scan** — before Module 1, check if today's scan already exists
 - **Respect exclude_companies** — silently filter these from all scan results
 - **Apply work_type filter** — always append work type to search queries unless `any`
@@ -700,6 +705,6 @@ If tracker doesn't exist: "No applications tracked yet. Say 'I applied to [compa
 
 ## Reference Files
 
-- `config.yaml` — user configuration (the only file users need to edit)
+- `config.yaml` — user configuration (project-local `./config.yaml` takes priority over `~/.claude/skills/job-radar/config.yaml`)
 - `references/sources.md` — platform search tips, URL patterns, timing guides by country
 - `references/skills-taxonomy.md` — ATS synonym matching across all role types and industries

@@ -91,6 +91,12 @@ Or just talk naturally — "find me jobs", "evaluate this JD", "tailor my CV for
 
 All settings in `config.yaml` (gitignored, created by `./setup`). Template: `config.example.yaml`.
 
+**Config lookup order** — the skill checks these paths in order and uses the first one found:
+1. `./config.yaml` — current working directory (project-local, takes priority)
+2. `~/.claude/skills/job-radar/config.yaml` — global fallback
+
+This means you can keep your config in your project directory and all `/job-*` commands will pick it up automatically, without copying or symlinking.
+
 | Field | Description |
 |-------|-------------|
 | `hunter.name` | Your name |
