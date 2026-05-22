@@ -1,0 +1,10 @@
+# Personal config — copy config.example.yaml → config.yaml and fill in your details
+config.yaml
+
+# User data — generated at runtime, never committed
+applications/
+scans/
+profile/
+
+# Generated distribution zip
+job-radar-skill.zip

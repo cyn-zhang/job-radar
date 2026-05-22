@@ -1,0 +1,558 @@
+# ============================================================
+# JobRadar — User Configuration
+# Copy this file to config.yaml and fill in your details.
+# Everything else (SKILL.md) stays untouched.
+# ============================================================
+
+hunter:
+  # --- Personal ---
+  name: "Your Name"
+  email: "your@email.com"          # Gmail digest sent here
+
+  # --- Career level ---
+  # Options: intern | graduate | junior | mid | senior | lead | manager | director | vp | executive
+  #   intern     → student / internship programs
+  #   graduate   → grad programs, < 1 yr experience
+  #   junior     → 1–3 yrs
+  #   mid        → 3–6 yrs
+  #   senior     → 6–10 yrs
+  #   lead       → tech lead / principal
+  #   manager    → engineering manager / senior manager
+  #   director   → director / senior director
+  #   vp         → VP of Engineering / VP Product
+  #   executive  → CTO, CIO, CPO, CEO and other C-suite
+  level: "intern"
+
+  # --- Target roles ---
+  # List any roles you want to search for.
+  # The copilot will search all of these across all sources.
+  roles:
+    - "Software Engineer Intern"
+    - "Data Engineer Intern"
+    - "AI Engineer Intern"
+    - "ML Engineer Intern"
+    - "DevOps Intern"
+    - "Security Engineer Intern"
+    - "Product Engineer Intern"
+    - "Product Design Intern"
+    - "Graduate Developer"
+
+  # --- Eligibility filter ---
+  # Include roles where eligible majors mention any of these keywords.
+  # Leave empty [] to skip eligibility filtering.
+  eligible_majors:
+    - "Computer Science"
+    - "CS"
+    - "Information Technology"
+    - "Software Engineering"
+    - "Engineering"
+
+  # --- Locations ---
+  locations:
+    - "Melbourne"
+    - "Sydney"
+    - "Remote"
+
+  # --- Industry focus ---
+  # Based on Seek.com.au industry categories (Australian job market standard)
+  #
+  # tech          → ICT, Software Engineering, Data, AI, Cybersecurity
+  # finance       → Banking, Insurance, Superannuation, Investment
+  # accounting    → Accounting, Audit, Advisory (Big 4 / mid-tier firms)
+  # consulting    → Management Consulting, Strategy, Business Advisory
+  # healthcare    → Healthcare, Medical, Pharmaceutical, Aged Care
+  # government    → Government, Defence, Public Sector, Policy
+  # legal         → Legal, Compliance, Risk
+  # education     → Education, Training, Research, Universities
+  # energy        → Mining, Resources, Oil & Gas, Utilities, Renewables
+  # retail        → Retail, Consumer Products, FMCG, E-commerce
+  # marketing     → Marketing, Communications, Advertising, Media, PR
+  # hr            → Human Resources, Recruitment, People & Culture
+  # construction  → Construction, Property, Real Estate, Architecture
+  # manufacturing → Manufacturing, Transport, Logistics, Supply Chain
+  # any           → no industry filter — search all sectors
+  industry: "tech"
+
+  # --- Work type filter ---
+  # Options: internship | graduate | contract | permanent | any
+  # Controls what role types are included in scans.
+  work_type: "internship"
+
+  # --- Job sources ---
+  sources:
+    seek: true
+    linkedin: true
+    gradconnection: true
+    aus_internship_finder: true
+    indeed: true
+    company_sites: true
+
+  # --- Target companies ---
+  # Uncomment / trim to the industries relevant to your `industry` setting above.
+  target_companies:
+    # ── Technology ────────────────────────────────────────────
+    - "Atlassian"
+    - "Canva"
+    - "Xero"
+    - "WiseTech Global"
+    - "SafetyCulture"
+    - "REA Group"
+    - "SEEK"
+    - "Afterpay"
+    - "Airwallex"
+    - "Airtasker"
+    - "Culture Amp"
+    - "Envato"
+    - "Deputy"
+    - "Finder"
+    - "Buildkite"
+    - "Rokt"
+    - "Linktree"
+    - "Immutable"
+    - "Brighte"
+    - "HealthEngine"
+    # Global tech with AU offices
+    - "Google"
+    - "Amazon"
+    - "Microsoft"
+    - "Apple"
+    - "Salesforce"
+    - "Twilio"
+    - "Stripe"
+    - "Databricks"
+    - "Snowflake"
+    - "GitHub"
+    - "GitLab"
+    - "Cloudflare"
+    - "HashiCorp"
+    - "MongoDB"
+    - "Palantir"
+    - "ServiceNow"
+    - "Workday"
+    - "Adobe"
+    - "Oracle"
+    - "SAP"
+    - "Cisco"
+    - "IBM"
+    # ── Finance / Banking ─────────────────────────────────────
+    - "CBA"
+    - "NAB"
+    - "ANZ"
+    - "Westpac"
+    - "Macquarie"
+    - "AMP"
+    - "Bendigo Bank"
+    - "Bank of Queensland"
+    - "Suncorp"
+    - "HSBC Australia"
+    - "Citibank Australia"
+    - "Deutsche Bank Australia"
+    - "Morgan Stanley Australia"
+    - "Goldman Sachs Australia"
+    - "J.P. Morgan Australia"
+    - "UBS Australia"
+    - "Barclays Australia"
+    - "BNP Paribas Australia"
+    - "Optiver"
+    - "SIG (Susquehanna)"
+    - "IMC Trading"
+    - "Citadel"
+    - "Jane Street"
+    - "Two Sigma"
+    - "Perpetual"
+    - "Challenger"
+    - "MLC"
+    - "REST Industry Super"
+    - "AustralianSuper"
+    - "Hostplus"
+    - "UniSuper"
+    - "Aware Super"
+    # ── Accounting ────────────────────────────────────────────
+    - "Deloitte"
+    - "PwC"
+    - "EY"
+    - "KPMG"
+    - "BDO"
+    - "Grant Thornton"
+    - "RSM Australia"
+    - "Pitcher Partners"
+    - "William Buck"
+    - "HLB Mann Judd"
+    - "Nexia Australia"
+    # ── Consulting ────────────────────────────────────────────
+    - "McKinsey & Company"
+    - "Bain & Company"
+    - "Boston Consulting Group"
+    - "Accenture"
+    - "Capgemini"
+    - "Cognizant"
+    - "Infosys"
+    - "Wipro"
+    - "Tata Consultancy Services"
+    - "DXC Technology"
+    - "Thoughtworks"
+    - "ThoughtWorks"
+    - "Slalom"
+    - "PA Consulting"
+    - "L.E.K. Consulting"
+    - "Oliver Wyman"
+    - "Roland Berger"
+    # ── Healthcare ────────────────────────────────────────────
+    - "CSL"
+    - "Ramsay Health Care"
+    - "Healius"
+    - "Healthscope"
+    - "Medibank"
+    - "Bupa Australia"
+    - "HCF"
+    - "nib Health Funds"
+    - "MedHealth"
+    - "Pharmaceutical Benefits Scheme"
+    - "Stryker"
+    - "Johnson & Johnson MedTech"
+    - "Philips Healthcare"
+    - "ResMed"
+    - "Cochlear"
+    - "Pro Medicus"
+    - "Epworth HealthCare"
+    - "St Vincent's Health Australia"
+    - "Monash Health"
+    - "Melbourne Health"
+    # ── Government ────────────────────────────────────────────
+    - "Australian Taxation Office"
+    - "Department of Home Affairs"
+    - "Australian Bureau of Statistics"
+    - "Services Australia"
+    - "CSIRO"
+    - "Australian Signals Directorate"
+    - "Australian Federal Police"
+    - "Defence Science and Technology Group"
+    - "Australian Securities and Investments Commission"
+    - "Reserve Bank of Australia"
+    - "National Australia Bank (Government Banking)"
+    - "Vic Government (DPC, DEECA, DTF)"
+    - "NSW Government (DCS, Transport, Treasury)"
+    - "QLD Government (DSITI, QTreasury)"
+    - "WA Government (JTSI)"
+    # ── Legal ─────────────────────────────────────────────────
+    - "Herbert Smith Freehills"
+    - "Allens"
+    - "King & Wood Mallesons"
+    - "Clayton Utz"
+    - "MinterEllison"
+    - "Corrs Chambers Westgarth"
+    - "Gilbert + Tobin"
+    - "Ashurst"
+    - "Norton Rose Fulbright"
+    - "Lander & Rogers"
+    - "Hall & Wilcox"
+    - "Maurice Blackburn"
+    # ── Education ─────────────────────────────────────────────
+    - "University of Melbourne"
+    - "University of Sydney"
+    - "University of New South Wales"
+    - "Monash University"
+    - "Australian National University"
+    - "University of Queensland"
+    - "University of Technology Sydney"
+    - "Deakin University"
+    - "RMIT University"
+    - "Pearson"
+    - "IDP Education"
+    - "Navitas"
+    - "Open Universities Australia"
+    - "LinkedIn Learning"
+    # ── Energy / Mining / Resources ───────────────────────────
+    - "BHP"
+    - "Rio Tinto"
+    - "Woodside Energy"
+    - "Santos"
+    - "Origin Energy"
+    - "AGL Energy"
+    - "Fortescue"
+    - "Newmont"
+    - "South32"
+    - "OZ Minerals"
+    - "Beach Energy"
+    - "Ampol"
+    - "Viva Energy"
+    - "Ausgrid"
+    - "APA Group"
+    - "Energy Australia"
+    # ── Retail / E-commerce ───────────────────────────────────
+    - "Woolworths"
+    - "Coles"
+    - "Wesfarmers"
+    - "JB Hi-Fi"
+    - "Harvey Norman"
+    - "Bunnings"
+    - "Kmart Australia"
+    - "Target Australia"
+    - "Big W"
+    - "Myer"
+    - "David Jones"
+    - "Officeworks"
+    - "The Reject Shop"
+    - "Catch Group"
+    - "Kogan"
+    - "Temple & Webster"
+    - "Booktopia"
+    # ── Marketing / Media ─────────────────────────────────────
+    - "News Corp Australia"
+    - "Nine Entertainment"
+    - "Seven West Media"
+    - "Network Ten"
+    - "ABC"
+    - "SBS"
+    - "Southern Cross Austereo"
+    - "Dentsu"
+    - "Publicis"
+    - "WPP AUNZ"
+    - "Ogilvy"
+    - "McCann"
+    - "Leo Burnett"
+    - "IPG Mediabrands"
+    - "OMD Australia"
+    - "Starcom"
+    - "HubSpot"
+    - "Marketo"
+    # ── HR / Recruitment ──────────────────────────────────────
+    - "Hays"
+    - "Robert Half"
+    - "Michael Page"
+    - "Randstad"
+    - "Manpower"
+    - "Hudson"
+    - "DFP Recruitment"
+    - "Adecco"
+    - "PageGroup"
+    - "Talent International"
+    - "Ignite"
+    - "Kelly Services"
+    - "Chandler Macleod"
+    - "Programmed"
+    # ── Construction / Property ───────────────────────────────
+    - "CIMIC Group"
+    - "Lendlease"
+    - "Downer Group"
+    - "John Holland"
+    - "CPB Contractors"
+    - "Built"
+    - "Multiplex"
+    - "Brookfield"
+    - "Mirvac"
+    - "Stockland"
+    - "Charter Hall"
+    - "GPT Group"
+    - "Scentre Group"
+    - "Domain"
+    - "Knight Frank"
+    - "CBRE"
+    - "JLL"
+    - "Colliers"
+    # ── Manufacturing / Transport / Logistics ─────────────────
+    - "Toll Group"
+    - "Qantas"
+    - "Virgin Australia"
+    - "Transurban"
+    - "Aurizon"
+    - "Pacific National"
+    - "DHL"
+    - "FedEx"
+    - "Australia Post"
+    - "StarTrack"
+    - "CHEP"
+    - "BlueScope Steel"
+    - "Boral"
+    - "James Hardie"
+    - "Incitec Pivot"
+    - "Orica"
+    - "Amcor"
+    - "Visy"
+    - "Lion"
+    - "Asahi Beverages"
+    - "Fosters Group"
+    - "Simplot"
+    - "George Weston Foods"
+
+  # --- Exclude companies ---
+  # Companies to skip during scans (already applied, not interested, etc.)
+  # Leave empty [] to show all results.
+  exclude_companies: []
+  # exclude_companies:
+  #   - "Company You Already Applied To"
+  #   - "Company You Don't Want"
+
+  # --- File paths ---
+  base_path: "applications/"
+  cv_path: "profile/YourCV.docx"
+
+  # --- Output format ---
+  # Options: docx | pdf | markdown
+  cv_format: "docx"
+  cover_letter_format: "docx"
+
+  # --- Digest ---
+  digest_time: "09:00"        # for Hermes cron — local time
+  digest_channel: "gmail"     # gmail | slack | whatsapp (if MCP available)
+
+# ============================================================
+# Examples of other configurations:
+#
+# ── Tech intern, Melbourne/Sydney ────────────────────────────
+#   level: intern
+#   roles:
+#     - "Software Engineer Intern"
+#     - "Data Engineer Intern"
+#     - "AI Engineer Intern"
+#   locations: ["Melbourne", "Sydney", "Remote"]
+#   industry: tech
+#   eligible_majors: ["Computer Science", "Software Engineering", "Engineering"]
+#   target_companies: ["Atlassian", "Canva", "Google", "Amazon", "Microsoft", "Xero"]
+#
+# ── Graduate developer, any location ─────────────────────────
+#   level: graduate
+#   roles:
+#     - "Graduate Software Engineer"
+#     - "Graduate Developer"
+#     - "Associate Software Engineer"
+#   locations: ["Melbourne", "Sydney", "Brisbane", "Remote"]
+#   industry: tech
+#   eligible_majors: []
+#   target_companies: ["Atlassian", "Canva", "REA Group", "SEEK", "Xero", "SafetyCulture"]
+#
+# ── Quant / finance intern ───────────────────────────────────
+#   level: intern
+#   roles:
+#     - "Quantitative Research Intern"
+#     - "Software Engineer Intern"
+#     - "Technology Analyst Intern"
+#   locations: ["Sydney", "Melbourne"]
+#   industry: finance
+#   eligible_majors: ["Computer Science", "Mathematics", "Statistics", "Engineering"]
+#   target_companies: ["Optiver", "Citadel Securities", "IMC Trading", "Jane Street",
+#                      "Macquarie", "Goldman Sachs Australia", "J.P. Morgan Australia"]
+#
+# ── Mid-level engineer, anywhere in Australia ────────────────
+#   level: mid
+#   roles:
+#     - "Software Engineer"
+#     - "Senior Software Engineer"
+#     - "Backend Engineer"
+#     - "Full Stack Engineer"
+#   locations: ["Sydney", "Melbourne", "Brisbane", "Remote"]
+#   industry: tech
+#   eligible_majors: []
+#   target_companies: ["Atlassian", "Canva", "Airwallex", "Culture Amp",
+#                      "Google", "Amazon", "Stripe", "Salesforce"]
+#
+# ── Senior engineer / tech lead ──────────────────────────────
+#   level: senior
+#   roles:
+#     - "Senior Software Engineer"
+#     - "Staff Engineer"
+#     - "Tech Lead"
+#     - "Principal Engineer"
+#   locations: ["Sydney", "Melbourne", "Remote"]
+#   industry: tech
+#   eligible_majors: []
+#   target_companies: ["Atlassian", "Canva", "WiseTech Global", "Palantir",
+#                      "Google", "Amazon", "Microsoft", "Stripe"]
+#
+# ── Engineering manager ───────────────────────────────────────
+#   level: manager
+#   roles:
+#     - "Engineering Manager"
+#     - "Senior Engineering Manager"
+#     - "Head of Engineering"
+#   locations: ["Sydney", "Melbourne", "Remote"]
+#   industry: tech
+#   eligible_majors: []
+#   target_companies: ["Atlassian", "Canva", "REA Group", "SafetyCulture",
+#                      "Amazon", "Google", "Salesforce"]
+#
+# ── Big 4 accounting / consulting grad ───────────────────────
+#   level: graduate
+#   roles:
+#     - "Graduate Analyst"
+#     - "Technology Consultant Analyst"
+#     - "Risk Advisory Analyst"
+#     - "Assurance Analyst"
+#   locations: ["Melbourne", "Sydney"]
+#   industry: accounting
+#   eligible_majors: ["Commerce", "Accounting", "Computer Science", "Engineering", "Finance"]
+#   target_companies: ["Deloitte", "PwC", "EY", "KPMG", "BDO", "Grant Thornton"]
+#
+# ── Management consulting ─────────────────────────────────────
+#   level: junior
+#   roles:
+#     - "Business Analyst"
+#     - "Associate Consultant"
+#     - "Technology Analyst"
+#   locations: ["Sydney", "Melbourne"]
+#   industry: consulting
+#   eligible_majors: []
+#   target_companies: ["McKinsey & Company", "Bain & Company", "Boston Consulting Group",
+#                      "Accenture", "Capgemini", "Thoughtworks"]
+#
+# ── UX / product designer, remote-first ──────────────────────
+#   level: junior
+#   roles:
+#     - "UX Designer"
+#     - "Product Designer"
+#     - "UI/UX Designer"
+#   locations: ["Remote", "Sydney", "Melbourne"]
+#   industry: tech
+#   eligible_majors: ["Design", "HCI", "Computer Science", "Psychology"]
+#   target_companies: ["Atlassian", "Canva", "SEEK", "Envato", "Culture Amp", "Deputy"]
+#
+# ── Data scientist / ML engineer ─────────────────────────────
+#   level: junior
+#   roles:
+#     - "Data Scientist"
+#     - "ML Engineer"
+#     - "Machine Learning Engineer"
+#     - "AI Engineer"
+#   locations: ["Sydney", "Melbourne", "Remote"]
+#   industry: tech
+#   eligible_majors: ["Computer Science", "Mathematics", "Statistics", "Data Science"]
+#   target_companies: ["Atlassian", "Canva", "REA Group", "Databricks",
+#                      "Google", "Amazon", "Microsoft", "Palantir"]
+#
+# ── Finance / banking grad ───────────────────────────────────
+#   level: graduate
+#   roles:
+#     - "Graduate Analyst"
+#     - "Technology Graduate"
+#     - "Associate"
+#   locations: ["Sydney", "Melbourne"]
+#   industry: finance
+#   eligible_majors: []
+#   target_companies: ["CBA", "NAB", "ANZ", "Westpac", "Macquarie",
+#                      "Goldman Sachs Australia", "J.P. Morgan Australia",
+#                      "Morgan Stanley Australia", "AMP"]
+#
+# ── Healthcare / medical devices ─────────────────────────────
+#   level: junior
+#   roles:
+#     - "Software Engineer"
+#     - "Data Engineer"
+#     - "Clinical Systems Analyst"
+#   locations: ["Melbourne", "Sydney"]
+#   industry: healthcare
+#   eligible_majors: []
+#   target_companies: ["CSL", "Cochlear", "ResMed", "Pro Medicus",
+#                      "Ramsay Health Care", "Sonic Healthcare", "Stryker"]
+#
+# ── Government / public sector ───────────────────────────────
+#   level: graduate
+#   roles:
+#     - "ICT Graduate"
+#     - "Data Analyst"
+#     - "Cyber Security Analyst"
+#   locations: ["Canberra", "Melbourne", "Sydney"]
+#   industry: government
+#   eligible_majors: []
+#   target_companies: ["CSIRO", "Australian Taxation Office", "Australian Signals Directorate",
+#                      "Services Australia", "Reserve Bank of Australia"]
+# ============================================================
