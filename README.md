@@ -39,23 +39,25 @@ Works for any career level (intern → lead), any industry, any location.
 
 ### Terminal — Claude Code
 
-**Standalone project (recommended)**
+**One-line install (standalone):**
 ```bash
-git clone https://github.com/cyn-zhang/job-radar
-cd job-radar
-./setup          # guided: asks name, email, level, locations
+git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup
+```
+
+**One-line global install** — commands work from any project:
+```bash
+git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup --global
+```
+
+**One-line install into an existing project:**
+```bash
+git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup --install ~/Projects/my-project
+```
+
+After standalone install:
+```bash
 # drop your CV into profile/
-claude .         # open in Claude Code → /job-scan
-```
-
-**Global install** — commands work from any project
-```bash
-cd job-radar && ./setup --global
-```
-
-**Add to an existing project**
-```bash
-cd job-radar && ./setup --install ~/Projects/my-project
+claude .    # open in Claude Code → /job-scan
 ```
 
 **Package for sharing** — creates `job-radar-skill.zip`
