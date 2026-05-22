@@ -71,7 +71,7 @@ prompt_list() {
 }
 
 write_config() {
-  local name="$1" email="$2" level="$3" locations="$4" industry="$5" cv_path="$6"
+  local name="$1" email="$2" level="$3" locations="$4" industry="$5" work_type="$6" cv_path="$7"
 
   # Convert comma-separated locations into YAML list items
   local loc_yaml=""
@@ -109,6 +109,8 @@ hunter:
 ${loc_yaml}
   industry: "$industry"
 
+  work_type: "$work_type"
+
   sources:
     seek: true
     linkedin: true
@@ -124,6 +126,8 @@ ${loc_yaml}
     - "Amazon"
     - "Microsoft"
     - "Xero"
+
+  exclude_companies: []
 
   base_path: "applications/"
   cv_path: "$cv_path"
@@ -175,7 +179,7 @@ interactive_setup() {
 
   echo ""
   echo "Career level:"
-  echo "  intern / graduate / junior / mid / senior / lead"
+  echo "  intern / graduate / junior / mid / senior / lead / manager / director / vp / executive"
   level=$(prompt "Level" "intern")
 
   echo ""
@@ -188,11 +192,16 @@ interactive_setup() {
   industry=$(prompt "Industry" "tech")
 
   echo ""
+  echo "Work type:"
+  echo "  internship | graduate | contract | permanent | any"
+  work_type=$(prompt "Work type" "internship")
+
+  echo ""
   echo "CV file — drop your CV into the profile/ folder, then enter the filename."
   cv_path=$(prompt "CV path" "profile/YourCV.docx")
 
   echo ""
-  write_config "$name" "$email" "$level" "$locations" "$industry" "$cv_path"
+  write_config "$name" "$email" "$level" "$locations" "$industry" "$work_type" "$cv_path"
 
   echo "✅ config.yaml created."
   echo ""
