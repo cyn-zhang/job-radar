@@ -1,0 +1,248 @@
+#!/usr/bin/env bash
+# setup — configure job-radar for use
+# Usage:
+#   ./setup                       interactive standalone setup (default)
+#   ./setup --global              install commands to ~/.claude/commands/
+#   ./setup --install <dir>       install commands into another project
+#   ./setup --zip                 package skill files for upload to claude.ai / Claude desktop / Codex
+
+set -e
+
+SKILL_DIR="$(cd "$(dirname "$0")" && pwd)"
+COMMANDS_SRC="$SKILL_DIR/.claude/commands"
+
+usage() {
+  echo "usage: ./setup [options]"
+  echo ""
+  echo "  (no args)              interactive setup — guided config + standalone project"
+  echo "  --global               install commands globally (~/.claude/commands/)"
+  echo "  --install <dir>        install commands into another project dir"
+  echo "  --zip                  package skill files → job-radar-skill.zip"
+  echo "                         upload zip to claude.ai / Claude desktop / Codex / any tool"
+  echo ""
+  echo "examples:"
+  echo "  ./setup                             # guided setup, then: claude ."
+  echo "  ./setup --global                    # works from any Claude Code project"
+  echo "  ./setup --install ~/Projects/myapp  # add to an existing project"
+  echo "  ./setup --zip                       # create zip for upload to any platform"
+  exit 1
+}
+
+install_commands() {
+  local TARGET_DIR="$1"
+  local TARGET_COMMANDS="$TARGET_DIR/.claude/commands"
+  mkdir -p "$TARGET_COMMANDS"
+
+  local COUNT=0
+  for f in "$COMMANDS_SRC"/*.md; do
+    fname="$(basename "$f")"
+    # Rewrite relative paths → absolute paths pointing to this skill install
+    sed \
+      "s|from config\.yaml|from $SKILL_DIR/config.yaml|g; \
+       s|in SKILL\.md|in $SKILL_DIR/SKILL.md|g" \
+      "$f" > "$TARGET_COMMANDS/$fname"
+    COUNT=$((COUNT + 1))
+  done
+
+  echo "✅ Installed $COUNT commands → $TARGET_COMMANDS"
+  echo "   Open $TARGET_DIR in Claude Code and type / to see job-* commands."
+}
+
+prompt() {
+  local label="$1"
+  local default="$2"
+  local result
+  if [ -n "$default" ]; then
+    printf "%s [%s]: " "$label" "$default"
+  else
+    printf "%s: " "$label"
+  fi
+  read -r result
+  echo "${result:-$default}"
+}
+
+prompt_list() {
+  local label="$1"
+  local default="$2"
+  printf "%s\n  (comma separated, e.g. %s)\n  > " "$label" "$default"
+  local result
+  read -r result
+  echo "${result:-$default}"
+}
+
+write_config() {
+  local name="$1" email="$2" level="$3" locations="$4" industry="$5" cv_path="$6"
+
+  # Convert comma-separated locations into YAML list items
+  local loc_yaml=""
+  IFS=',' read -ra LOCS <<< "$locations"
+  for loc in "${LOCS[@]}"; do
+    loc_yaml="${loc_yaml}    - \"$(echo "$loc" | xargs)\""$'\n'
+  done
+
+  cat > "$SKILL_DIR/config.yaml" <<EOF
+# ============================================================
+# JobRadar — User Configuration
+# ============================================================
+
+hunter:
+  name: "$name"
+  email: "$email"
+
+  level: "$level"
+
+  roles:
+    - "Software Engineer Intern"
+    - "Data Engineer Intern"
+    - "AI Engineer Intern"
+    - "ML Engineer Intern"
+    - "Graduate Developer"
+
+  eligible_majors:
+    - "Computer Science"
+    - "CS"
+    - "Information Technology"
+    - "Software Engineering"
+    - "Engineering"
+
+  locations:
+${loc_yaml}
+  industry: "$industry"
+
+  sources:
+    seek: true
+    linkedin: true
+    gradconnection: true
+    aus_internship_finder: true
+    indeed: true
+    company_sites: true
+
+  target_companies:
+    - "Atlassian"
+    - "Canva"
+    - "Google"
+    - "Amazon"
+    - "Microsoft"
+    - "Xero"
+
+  base_path: "applications/"
+  cv_path: "$cv_path"
+
+  cv_format: "docx"
+  cover_letter_format: "docx"
+
+  digest_time: "09:00"
+  digest_channel: "gmail"
+EOF
+}
+
+interactive_setup() {
+  mkdir -p "$SKILL_DIR/applications" "$SKILL_DIR/scans" "$SKILL_DIR/profile"
+
+  if [ -f "$SKILL_DIR/config.yaml" ]; then
+    echo "✅ config.yaml already exists — skipping setup."
+    echo "   Edit config.yaml directly to change settings."
+    echo ""
+    echo "✅ job-radar ready. Run: claude ."
+    return
+  fi
+
+  echo ""
+  echo "👋 Welcome to job-radar."
+  echo ""
+  echo "How would you like to configure it?"
+  echo "  1) Guided setup  — answer a few questions"
+  echo "  2) Manual        — copy config.example.yaml and edit it yourself"
+  echo ""
+  printf "Choice [1]: "
+  read -r choice
+  choice="${choice:-1}"
+
+  if [ "$choice" = "2" ]; then
+    cp "$SKILL_DIR/config.example.yaml" "$SKILL_DIR/config.yaml"
+    echo ""
+    echo "✅ config.yaml created from template."
+    echo "   Edit it with your details, then run: claude ."
+    return
+  fi
+
+  echo ""
+
+  local name email level locations industry cv_path
+
+  name=$(prompt "Your name" "")
+  email=$(prompt "Your email (for digest)" "")
+
+  echo ""
+  echo "Career level:"
+  echo "  intern / graduate / junior / mid / senior / lead"
+  level=$(prompt "Level" "intern")
+
+  echo ""
+  locations=$(prompt_list "Locations" "Melbourne, Sydney, Remote")
+
+  echo ""
+  echo "Industry focus:"
+  echo "  tech | finance | accounting | consulting | healthcare | government"
+  echo "  legal | education | energy | retail | marketing | hr | construction | manufacturing | any"
+  industry=$(prompt "Industry" "tech")
+
+  echo ""
+  echo "CV file — drop your CV into the profile/ folder, then enter the filename."
+  cv_path=$(prompt "CV path" "profile/YourCV.docx")
+
+  echo ""
+  write_config "$name" "$email" "$level" "$locations" "$industry" "$cv_path"
+
+  echo "✅ config.yaml created."
+  echo ""
+  echo "Next steps:"
+  echo "  1. Drop your CV into profile/ (if you haven't already)"
+  echo "  2. Run: claude ."
+  echo "  3. Type /job-scan or say \"find me jobs\""
+  echo ""
+  echo "Edit config.yaml anytime to add target companies, change roles, etc."
+}
+
+create_zip() {
+  local OUT="$SKILL_DIR/job-radar-skill.zip"
+  rm -f "$OUT"
+
+  zip -j "$OUT" \
+    "$SKILL_DIR/SKILL.md" \
+    "$SKILL_DIR/CLAUDE.md" \
+    "$SKILL_DIR/config.example.yaml" \
+    "$SKILL_DIR/references/sources.md" \
+    "$SKILL_DIR/references/skills-taxonomy.md" 2>/dev/null
+
+  # Include commands and templates subfolders with relative paths
+  (cd "$SKILL_DIR" && zip -r "$OUT" .claude/commands templates 2>/dev/null)
+
+  echo "✅ Created: job-radar-skill.zip"
+  echo ""
+  echo "Upload options:"
+  echo "  claude.ai / Claude desktop  → Projects → New Project → upload zip or paste job-radar-project.md"
+  echo "  Claude Code                 → extract zip, run ./setup or ./setup --global"
+  echo "  Codex / other tools         → upload SKILL.md + job-radar-project.md as context"
+}
+
+# Parse args
+case "${1:-}" in
+  --global)
+    install_commands "$HOME/.claude"
+    ;;
+  --install)
+    [ -z "${2:-}" ] && { echo "error: --install requires a target directory"; usage; }
+    [ ! -d "$2" ] && { echo "error: '$2' is not a directory"; exit 1; }
+    install_commands "$2"
+    ;;
+  --zip)
+    create_zip
+    ;;
+  "")
+    interactive_setup
+    ;;
+  *)
+    usage
+    ;;
+esac

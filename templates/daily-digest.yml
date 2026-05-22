@@ -1,0 +1,35 @@
+name: Daily Job Digest
+
+on:
+  schedule:
+    # 9am AEST (UTC+10) = 11pm UTC previous day
+    # Adjust for AEDT (UTC+11, Oct-Apr): change to "0 22 * * *"
+    - cron: "0 23 * * *"
+  workflow_dispatch:  # allow manual trigger from GitHub UI
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic/claude-code
+
+      - name: Run daily job scan and digest
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          claude -p "run daily job scan and send Gmail digest" \
+            --model claude-haiku-4-5-20251001 \
+            --no-interactive
+
+      - name: Commit scan results
+        run: |
+          git config user.name "job-radar[bot]"
+          git config user.email "job-radar[bot]@users.noreply.github.com"
+          git add scans/ || true
+          git diff --staged --quiet || git commit -m "chore: daily scan $(date +%Y-%m-%d)"
+          git push || true
