@@ -5,8 +5,8 @@ Copy config.example.yaml to config.yaml and fill in your personal details before
 
 ## Paths
 base_path: applications/
-cv_path:   profile/YourCV.docx
 skill:     SKILL.md
+# cv_path and all other user settings live in config.yaml — edit that file, not here.
 
 ## File Structure
 All job files saved under:
@@ -26,7 +26,7 @@ scans/Jobs_{YYYY-MM-DD}.md
 - Seek: seek.com.au
 - LinkedIn: linkedin.com/jobs
 - GradConnection: au.gradconnection.com
-- Aus Internship Finder: aus-internship-finder.vercel.app (load SKILL.md reference)
+- Aus Internship Finder: aus-internship-finder.vercel.app (load references/aus-internship-finder.md — do NOT use site: search)
 - Indeed: indeed.com.au
 - Company career pages: see config.yaml target_companies
 
