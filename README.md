@@ -10,7 +10,7 @@ Works for any career level (intern → executive), any industry, any location.
 
 | | |
 |---|---|
-| 🔍 Daily job scan | Seek, LinkedIn, GradConnection, Aus Internship Finder, Indeed, company career pages |
+| 🔍 Daily job scan | Major job boards and company career pages |
 | 🧠 JD evaluation | Honest fit scoring, ATS keywords, Bottom Line verdict |
 | 📄 CV tailoring | Strongest evidence mapped to JD, no fabrication |
 | 🧩 Gap analysis | Fixable gaps with CV lines; hard gaps with interview scripts |

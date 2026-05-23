@@ -1,4 +1,4 @@
-# job-radar — Claude Project Instructions
+# JobRadar — Claude Project Instructions
 
 No install, no terminal, no git needed. Pick your platform below, follow the steps, then scroll down to edit your config.
 
@@ -131,12 +131,16 @@ Where:  {locations joined by " | "}
 
 Here's what I can do:
 
-🔍 Daily Job Scan     — Seek, LinkedIn, GradConnection, Indeed, company pages
-🧠 Evaluate Any JD   — coverage map + honest verdict + salary benchmark
-📄 Tailor Your CV    — strongest evidence, JD language mirrored
-🧩 Gap Analysis      — fixable gaps + hard gap interview scripts
-📊 Application Tracker — track status from applied → offer
-📋 Digest            — compiled results you can copy to email
+🔍 Daily Job Scan        — major job boards + company career pages
+🧠 Evaluate Any JD       — coverage map + honest verdict + salary benchmark
+📄 Tailor Your CV        — strongest evidence, JD language mirrored
+🧩 Gap Analysis          — fixable gaps + hard gap interview scripts
+✉️ Cover Letter          — 4 paragraphs, role-specific, never generic
+🎤 Interview Prep        — STAR behavioural + technical questions + mock interview
+📊 Application Tracker   — track status from applied → offer
+🗂️ Status Dashboard      — summary of all active applications and next actions
+📬 Gmail Digest          — daily email with top picks and full results table
+⚙️ Update Config         — change roles, locations, level, or companies in chat
 
 What would you like to do?
 • 🔍 Scan today's roles
