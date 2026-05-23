@@ -6,33 +6,34 @@ No install, no terminal, no git needed. Pick your platform below, follow the ste
 
 ## How to set up (pick your platform)
 
-### claude.ai (browser)
-1. Go to [claude.ai](https://claude.ai) → **Projects** → **New Project**
+### Option A — As a Skill (claude.ai · Claude Desktop · Cowork)
+
+1. Go to **Customize → Skills → Upload skill**
+2. Upload this file
+3. Edit your config when prompted (name, email, roles, locations)
+4. Start chatting: "find me jobs"
+
+| Platform | Where to upload |
+|----------|----------------|
+| **claude.ai** | Profile → Customize → Skills → Upload |
+| **Claude Desktop** | Customize → Skills → Upload |
+| **Cowork** | Customize → Skills → Upload |
+
+### Option B — As a Project (claude.ai · Claude Desktop)
+
+1. Go to **Projects → New Project**
 2. Click **Set project instructions**
 3. Paste this entire file
 4. Edit the config block below (name, email, roles, locations)
 5. Save → start chatting: "find me jobs"
 
-### Claude desktop app (Mac / Windows)
-1. Open Claude desktop → **Projects** → **New Project**
-2. Click **Set project instructions**
-3. Paste this entire file
-4. Edit the config block below
-5. Save → start chatting
+| Platform | Where to paste |
+|----------|---------------|
+| **claude.ai** | Projects → New Project → Set project instructions |
+| **Claude Desktop** | Projects → New Project → Set project instructions |
 
-### Codex / other AI tools
-1. Create a new assistant or system prompt
-2. Paste this entire file as the system prompt or context
-3. Edit the config block below
-4. Start a conversation: "find me jobs"
-
-### Claude Code (terminal users)
-Use the full install instead — better experience with slash commands and file saving:
-```bash
-git clone https://github.com/cyn-zhang/job-radar
-cd job-radar && ./setup
-claude .
-```
+> **Claude Code (terminal)?** Use the full install for slash commands + file saving:
+> `git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup`
 
 ---
 
@@ -69,6 +70,7 @@ sources:
   seek: true
   linkedin: true
   gradconnection: true
+  aus_internship_finder: true
   indeed: true
   company_sites: true
 
@@ -126,7 +128,7 @@ If config is missing or incomplete, ask the user to fill it in before proceeding
 ```
 🎯 JobRadar — clocking in, {name}.
 
-Target: {level} {work_type} roles in {industry}
+Target: {level} roles in {industry joined by " / "}
 Roles:  {roles joined by " | "}
 Where:  {locations joined by " | "}
 
@@ -213,7 +215,7 @@ Match % per role: title match + location match + eligibility + industry alignmen
 Use this exact structure every run — no extra urgency boxes, no duplicate tables:
 
 ```
-# {industry} Jobs — {YYYY-MM-DD}
+# {industry joined by " / "} Jobs — {YYYY-MM-DD}
 Level: {level} | Work type: {work_type} | Locations: {locations joined by " | "}
 Roles: {roles joined by " | "}
 
@@ -394,7 +396,7 @@ Output as `### {company}/{job_title}/CoverLetter_{Company}_{Role}_{date}.md`.
 
 ### Module 7: Digest
 
-Run Module 1, then output the digest as a formatted markdown block the user can read and copy to email.
+Run Module 1, then compose the digest and create a Gmail draft via Gmail MCP (connect at **Customize → Connectors**). If Gmail MCP is not connected, output the digest as a formatted markdown block the user can copy.
 
 **Subject line:** `🎯 Job Digest {YYYY-MM-DD} | {X} roles | {Y} strong fits`
 

@@ -29,13 +29,13 @@ JobRadar works in three modes — pick whichever fits your setup:
 
 | Mode | Best for | Features |
 |------|----------|----------|
-| **Skill** | claude.ai, Claude Desktop, Codex — no terminal | All modules, chat-only output |
+| **Skill** | claude.ai, Claude Desktop, Cowork — no terminal | All modules, chat-only output |
 | **Project** | claude.ai, Claude Desktop — no terminal | All modules, config embedded in instructions |
 | **Claude Code** | Terminal users | All modules + slash commands + file saving + cron |
 
 ---
 
-### As a Skill — claude.ai, Claude Desktop, Codex
+### As a Skill — claude.ai, Claude Desktop, Cowork
 
 **Option A — Upload skill file** *(simplest)*
 
@@ -55,7 +55,7 @@ JobRadar works in three modes — pick whichever fits your setup:
 |----------|----------------|
 | **claude.ai** | Profile → Customize → Skills → Upload |
 | **Claude Desktop** | Customize → Skills → Upload |
-| **Codex** | Customize → Skills → Upload |
+| **Cowork** | Customize → Skills → Upload |
 
 ---
 
@@ -162,7 +162,7 @@ Say "update my config", "add Brisbane to my locations", or "change my level to g
 Uses Gmail MCP to create digest drafts. To connect:
 
 **claude.ai / Claude Desktop**
-1. Go to **Settings → Integrations** → find Gmail → **Connect**
+1. Go to **Customize → Connectors** → find Gmail → **Connect**
 2. Authenticate when prompted
 
 **Claude Code (terminal)**
@@ -212,7 +212,7 @@ job-radar/
 ├── config.yaml               ← your settings (gitignored, created by ./setup)
 ├── setup                     ← install script
 ├── templates/
-│   └── job-radar-project.md  ← paste into claude.ai / Claude desktop / Codex
+│   └── job-radar-project.md  ← paste into claude.ai / Claude desktop / Cowork
 ├── references/               ← platform tips, ATS taxonomy, timing guides
 ├── applications/             ← gitignored — your job applications
 ├── scans/                    ← gitignored — daily scan results
