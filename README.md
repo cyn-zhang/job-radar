@@ -17,6 +17,9 @@ Works for any career level (intern → lead), any industry, any location.
 | ✉️ Cover letter | 4 paragraphs, role-specific, never generic |
 | 🎤 Interview prep | Behavioural (STAR) + technical questions, mock interview mode |
 | 📬 Gmail digest | Daily email with top picks and full results table |
+| 📊 Application tracker | Track status from applied → offer; auto-updated from chat |
+| 🗂️ Status dashboard | Summary of all active applications, offers, and next actions |
+| ⚙️ Config update | Change roles, locations, level, or companies in chat |
 
 ---
 
