@@ -1,3 +1,6 @@
+---
+description: Add or update an application in the tracker
+---
 Update the application tracker using JobRadar. Load config from config.yaml, then follow Module 9 in SKILL.md.
 
 If no arguments provided, show the current tracker table from applications/tracker.md and ask what to update.

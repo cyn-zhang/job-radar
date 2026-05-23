@@ -1,1 +1,4 @@
+---
+description: Scan jobs + send Gmail digest to inbox
+---
 Run the JobRadar daily digest. Load config from config.yaml, then follow Module 7 in SKILL.md. Run the job scan (Module 1), compose the digest email, save the scan to scans/Jobs_{YYYY-MM-DD}.md, then create a Gmail draft via MCP and send to the configured email address.
