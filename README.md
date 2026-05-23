@@ -1,8 +1,8 @@
 # job-radar
 
-AI-powered job hunting assistant. Scans job boards daily, evaluates JDs honestly, tailors your CV, writes cover letters, and sends a Gmail digest.
+**JobRadar** is an AI-powered job hunting copilot. Scans job boards daily, evaluates JDs honestly, maps your CV against requirements, tailors your CV and cover letter, preps you for interviews, tracks your applications, and sends a Gmail digest.
 
-Works for any career level (intern → lead), any industry, any location.
+Works for any career level (intern → executive), any industry, any location.
 
 ---
 
@@ -25,7 +25,17 @@ Works for any career level (intern → lead), any industry, any location.
 
 ## Quick start
 
-### No terminal — claude.ai, Claude desktop, or Codex
+JobRadar works in three modes — pick whichever fits your setup:
+
+| Mode | Best for | Features |
+|------|----------|----------|
+| **Skill** | claude.ai, Claude Desktop, Codex — no terminal | All modules, chat-only output |
+| **Project** | claude.ai, Claude Desktop — no terminal | All modules, config embedded in instructions |
+| **Claude Code** | Terminal users | All modules + slash commands + file saving + cron |
+
+---
+
+### As a Skill — claude.ai, Claude Desktop, Codex
 
 **Option A — Upload skill file** *(simplest)*
 
@@ -34,7 +44,7 @@ Works for any career level (intern → lead), any industry, any location.
 3. Edit the config block (name, email, roles, locations) when prompted
 4. Start chatting — "find me jobs", "evaluate this JD"
 
-**Option B — Upload skill zip** *(full install, includes file saving)*
+**Option B — Upload skill zip** *(includes file saving)*
 
 1. Download [`job-radar-skill.zip`](https://github.com/cyn-zhang/job-radar/releases) (or run `./setup --zip` if you have a terminal)
 2. Go to **Customize → Skills → Upload skill** and upload the zip
@@ -49,7 +59,21 @@ Works for any career level (intern → lead), any industry, any location.
 
 ---
 
-### Terminal — Claude Code
+### As a Project — claude.ai, Claude Desktop
+
+1. Open `templates/job-radar-project.md` from this repo
+2. Edit the config block at the top (name, email, roles, locations)
+3. Paste the whole file into **Project Instructions**
+4. Start chatting — "find me jobs", "evaluate this JD"
+
+| Platform | Where to paste |
+|----------|---------------|
+| **claude.ai** | Projects → New Project → Set project instructions |
+| **Claude Desktop** | Projects → New Project → Set project instructions |
+
+---
+
+### As a Claude Code skill — Terminal
 
 **Standalone (recommended)** — a dedicated job-hunting workspace:
 
@@ -58,19 +82,9 @@ git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup
 ```
 
 ```bash
-# 1. You can setup config by using command
-./setup
-# 2. You can also setup config by create config.yaml yourself
-# create config.yaml and replace example values with your personal details
-cp config.example.yaml config.yaml
-nano config.yaml # or directly create and open config.yaml to update vaules
-# drop your CV into profile/
-```
-
-```bash
 # open in Claude Code and use any job commands or send message
 claude .
-/job-digest # or message like 'send me daily job digest email"
+/job-digest # or message like 'send me daily job digest email'
 ```
 
 **Global install** — `/job-*` commands available in every Claude Code project:
@@ -83,7 +97,6 @@ git clone https://github.com/cyn-zhang/job-radar ~/.claude/skills/job-radar
 > ```bash
 > git clone https://github.com/cyn-zhang/job-radar ~/.claude/skills/job-radar
 > ~/.claude/skills/job-radar/setup --install ~/path-to/my-project
-> 
 > ```
 
 **Package for sharing** — creates `job-radar-skill.zip`
@@ -185,7 +198,7 @@ git clone https://github.com/garrytan/gstack.git ~/.claude/skills/gstack
 cd ~/.claude/skills/gstack && ./setup
 ```
 
-job-radar detects it automatically and uses `/browse` for sites that need it.
+JobRadar detects it automatically and uses `/browse` for sites that need it.
 
 ---
 
