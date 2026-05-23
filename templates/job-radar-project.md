@@ -400,7 +400,7 @@ Run Module 1, then output the digest as a formatted markdown block the user can 
 
 Hi {name},
 
-Daily scan across {sources}. **{X} roles tracked** — {N} open now, {N} not yet open, {N} closed[, {N} new finds].
+Daily scan across {sources — ALL enabled sources from config, e.g. Seek, LinkedIn, GradConnection, Aus Internship Finder, Indeed, and direct career pages}. **{X} roles tracked** — {N} open now, {N} not yet open, {N} closed[, {N} new finds].
 
 ⚡ Act this week: {1–2 sentences naming specific roles with rolling closes or hard deadlines. Omit if nothing urgent.}
 

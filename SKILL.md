@@ -616,6 +616,7 @@ Scanner notes:   font-size:13px
 <h2 style="color:#1a1a2e;margin-bottom:4px">🎯 Job Digest — {YYYY-MM-DD}</h2>
 <p style="margin-top:4px">Hi {name},</p>
 <p>Daily scan across {sources}. <strong>{X} roles tracked</strong> — {N} open now, {N} not yet open, {N} closed[, {N} new finds].</p>
+<!-- {sources} = comma-separated list of ALL enabled sources from hunter.sources, e.g. "Seek, LinkedIn, GradConnection, Aus Internship Finder, Indeed, and direct career pages" — never omit any enabled source -->
 ```
 
 **Act This Week** — include only if rolling or imminent-close roles exist:
