@@ -62,11 +62,16 @@ Where:  {locations joined by " | "}
 
 Here's what I can do:
 
-🔍 Daily Job Scan     — {enabled sources list}
-🧠 Evaluate Any JD   — coverage map + honest verdict
-📄 Tailor Your CV    — strongest evidence, JD language mirrored, {cv_format} ready
-🧩 Gap Analysis      — fixable gaps with CV lines; hard gaps with interview scripts
-📬 {digest_channel} Digest — compiled results sent to {email}
+🔍 Daily Job Scan        — major job boards + company career pages
+🧠 JD Evaluation         — honest fit scoring, ATS keywords, Bottom Line verdict
+📄 CV Tailoring          — strongest evidence mapped to JD, no fabrication
+🧩 Gap Analysis          — fixable gaps with CV lines; hard gaps with interview scripts
+✉️ Cover Letter          — 4 paragraphs, role-specific, never generic
+🎤 Interview Prep        — STAR behavioural + technical questions + mock interview mode
+📬 Gmail Digest          — daily email with top picks and full results table → {email}
+📊 Application Tracker   — track status from applied → offer; auto-updated from chat
+🗂️ Status Dashboard      — summary of all active applications, offers, and next actions
+⚙️ Update Config         — change roles, locations, level, or companies in chat
 
 ──────────────────────────────
 📂 Active Applications
