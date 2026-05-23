@@ -71,7 +71,12 @@ hunter:
   # construction  → Construction, Property, Real Estate, Architecture
   # manufacturing → Manufacturing, Transport, Logistics, Supply Chain
   # any           → no industry filter — search all sectors
-  industry: "tech"
+  # List one or more industries to search across multiple sectors.
+  industry:
+    - "tech"
+  # industry:
+  #   - "tech"
+  #   - "finance"
 
   # --- Work type filter ---
   # Options: internship | graduate | contract | permanent | any

@@ -60,7 +60,8 @@ locations:
   - "Sydney"
   - "Remote"
 
-industry: "tech"          # tech | finance | accounting | consulting | healthcare | government | legal | education | energy | retail | marketing | hr | construction | manufacturing | any
+industry:                 # one or more: tech | finance | accounting | consulting | healthcare | government | legal | education | energy | retail | marketing | hr | construction | manufacturing | any
+  - "tech"
 
 work_type: "internship"   # internship | graduate | contract | permanent | any
 

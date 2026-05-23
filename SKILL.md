@@ -33,7 +33,7 @@ Extract:
 {roles}             ← hunter.roles (list)
 {eligible_majors}   ← hunter.eligible_majors (list, may be empty)
 {locations}         ← hunter.locations (list)
-{industry}          ← hunter.industry
+{industry}          ← hunter.industry (list — one or more values)
 {work_type}         ← hunter.work_type (internship | graduate | contract | permanent | any)
 {sources}           ← hunter.sources (map of enabled/disabled)
 {target_companies}  ← hunter.target_companies (list, may be empty)
@@ -56,7 +56,7 @@ If config.yaml is not found, ask:
 ```
 🎯 JobRadar — clocking in, {name}.
 
-Target: {level} roles in {industry}
+Target: {level} roles in {industry joined by " / "}
 Roles:  {roles joined by " | "}
 Where:  {locations joined by " | "}
 
@@ -237,7 +237,7 @@ Match % per role:
 Use this exact structure every run — do not add extra sections, urgency boxes, or duplicate tables:
 
 ```
-# {industry} Jobs — {YYYY-MM-DD}
+# {industry joined by " / "} Jobs — {YYYY-MM-DD}
 Level: {level} | Work type: {work_type} | Locations: {locations joined by " | "}
 Roles: {roles joined by " | "}
 

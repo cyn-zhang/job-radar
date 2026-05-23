@@ -1,81 +1,149 @@
 # Job Platform Search Guide
 
-## Seek (seek.com.au)
-Best for: volume of Australian listings, Seek intern/grad filter
-
-Search URL pattern:
-```
-https://www.seek.com.au/{role}-jobs/in-{location}?daterange=14&workarrangement=remote,hybrid
-```
-
-Query tips:
-- Use "graduate" OR "intern" OR "junior" — companies use these interchangeably
-- Filter: Classification → Information & Communication Technology
-- Sort by: Date (newest first)
-- Set date range to last 14 days to avoid stale listings
-
-Sample searches:
-- `software engineer internship Melbourne`
-- `data engineer intern Sydney`
-- `devops intern Australia remote`
-- `machine learning intern graduate`
+Search patterns are dynamic — substitute values from `config.yaml` using the mappings below.
 
 ---
 
-## GradConnection (gradconnection.com.au)
-Best for: structured grad/intern programs at big companies (Big 4 tech, banks, consulting)
+## Config → URL mapping
+
+### work_type → search keyword
+
+| config `work_type` | Keyword to append |
+|--------------------|-------------------|
+| `internship` | `intern` OR `internship` |
+| `graduate` | `graduate` OR `grad program` |
+| `contract` | `contract` OR `fixed-term` |
+| `permanent` | `full-time` OR `permanent` |
+| `any` | *(omit)* |
+
+### industry → GradConnection discipline slug
+
+`industry` is a list — search each discipline slug separately when multiple industries are configured.
+
+| config `industry` | GradConnection slug |
+|-------------------|---------------------|
+| `tech` | `information-technology` |
+| `finance` | `banking-finance` |
+| `accounting` | `accounting-finance` |
+| `consulting` | `management-consulting` |
+| `healthcare` | `healthcare-medical` |
+| `government` | `government-defence` |
+| `legal` | `legal` |
+| `education` | `education-training` |
+| `energy` | `engineering` |
+| `retail` | `retail-consumer-products` |
+| `marketing` | `marketing-communications` |
+| `hr` | `human-resources-recruitment` |
+| `construction` | `construction` |
+| `manufacturing` | `transport-logistics` |
+| `any` | *(omit discipline — browse all)* |
+
+### work_type → GradConnection program slug
+
+| config `work_type` | GradConnection slug |
+|--------------------|---------------------|
+| `internship` | `internships` |
+| `graduate` | `graduate-jobs` |
+| `contract` / `permanent` / `any` | `jobs` |
+
+### level → LinkedIn experience filter (f_E)
+
+| config `level` | LinkedIn `f_E` |
+|----------------|----------------|
+| `intern` | `1` |
+| `graduate` / `junior` | `1,2` |
+| `mid` | `3,4` |
+| `senior` / `lead` | `4` |
+| `manager` | `5` |
+| `director` / `vp` / `executive` | `5,6` |
+
+---
+
+## Seek (seek.com.au)
+
+Best for: volume of Australian listings, built-in work type filters.
 
 Search URL pattern:
+```
+https://www.seek.com.au/{role-slug}-jobs/in-{location}?daterange=14
+```
+
+Query tips:
+- Append `{work_type keyword}` to role query (e.g. "software engineer intern")
+- Filter: Classification → matches your `industry` config
+- Sort by: Date (newest first)
+- Date range 14 days avoids stale listings
+
+---
+
+## GradConnection (au.gradconnection.com)
+
+Best for: structured grad/intern programs at big companies (Big 4 tech, banks, consulting).
+
+Search URL pattern:
+```
+https://au.gradconnection.com/{work_type slug}/{discipline slug}/
+```
+
+Example (work_type=internship, industry=tech):
 ```
 https://au.gradconnection.com/internships/information-technology/
 ```
 
+Example (work_type=graduate, industry=finance):
+```
+https://au.gradconnection.com/graduate-jobs/banking-finance/
+```
+
 Query tips:
-- Filter by: Discipline → Engineering / IT / Computer Science
-- Filter by: Program type → Internship, Vacation Program
 - Many programs open March–May for Summer intake (Nov–Feb start)
 - Check application deadlines carefully — many close months before start date
-
-Key companies to check directly:
-- Atlassian, Canva, Afterpay/Block, REA Group, Seek (the company), Xero, WiseTech Global
-- Big 4: Deloitte, PwC, KPMG, EY (tech/digital arms)
-- Big banks: ANZ, NAB, CBA, Westpac (tech divisions)
 
 ---
 
 ## LinkedIn Jobs
-Best for: networking signals, startup roles, international companies with AU offices
+
+Best for: networking signals, startup roles, international companies with AU offices.
 
 Search URL pattern:
 ```
-https://www.linkedin.com/jobs/search/?keywords={role}+intern&location=Australia&f_E=1
+https://www.linkedin.com/jobs/search/?keywords={role}&location={location}&f_E={level filter}
 ```
-(f_E=1 = Entry level / Internship)
+
+Example (level=intern, role=Software Engineer, location=Australia):
+```
+https://www.linkedin.com/jobs/search/?keywords=Software+Engineer+intern&location=Australia&f_E=1
+```
 
 Query tips:
-- Use "Easy Apply" filter to find quick applications
-- Set alert for "Software Engineer Intern Australia" to get email notifications
-- Check company pages directly for CS internship postings not on job boards
+- Set alert for your role + location to get email notifications
+- Check company pages directly for roles not surfaced by search
 - Connect with recruiters on LinkedIn after applying — mention the role
 
 ---
 
 ## Indeed Australia (indeed.com.au)
-Best for: smaller companies, startups, roles not on Seek
+
+Best for: smaller companies, startups, roles not on Seek.
 
 Search URL pattern:
 ```
-https://au.indeed.com/jobs?q={role}+intern&l={city}&fromage=14
+https://au.indeed.com/jobs?q={role}+{work_type keyword}&l={city}&fromage=14
+```
+
+Example (work_type=internship, role=Data Engineer, location=Melbourne):
+```
+https://au.indeed.com/jobs?q=data+engineer+intern&l=Melbourne&fromage=14
 ```
 
 Query tips:
 - `fromage=14` = past 14 days
-- Use advanced search: "intern" OR "internship" OR "graduate" in title
 - Indeed aggregates from company sites — click through to original posting to apply
 
 ---
 
 ## Aus Internship Finder
+
 URL: https://aus-internship-finder.vercel.app/
 Raw data: https://raw.githubusercontent.com/YangS1718/aus-internship-finder/main/asset.json
 
@@ -85,13 +153,14 @@ Raw data: https://raw.githubusercontent.com/YangS1718/aus-internship-finder/main
 How to use:
 - Use only to discover which companies run intern/grad programs
 - Do NOT rely on it for application dates — fetch those live from Seek, GradConnection, LinkedIn, or the company's career page directly
-- Search pattern for each company: "{company_name}" careers internship {year}
+- Search pattern for each company: `"{company_name}" careers {work_type keyword} {year}`
 
 Do NOT search: site:aus-internship-finder.vercel.app — not indexed.
 
 ---
 
 ## Company Career Pages (direct)
+
 Check these directly — many don't post everywhere:
 
 | Company | Career Page |
