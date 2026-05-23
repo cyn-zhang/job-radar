@@ -24,20 +24,14 @@ Works for any career level (intern → lead), any industry, any location.
 
 ### No terminal — claude.ai, Claude desktop, or Codex
 
-**Option A — Paste into Project Instructions** *(simplest)*
+**Option A — Upload skill file** *(simplest)*
 
-1. Open `templates/job-radar-project.md` from this repo
-2. Edit the config block at the top (name, email, roles, locations)
-3. Paste the whole file into your platform's **Project Instructions** or system prompt
+1. Download `templates/job-radar-project.md` from this repo
+2. Go to **Customize → Skills → Upload skill** and upload the file
+3. Edit the config block (name, email, roles, locations) when prompted
 4. Start chatting — "find me jobs", "evaluate this JD"
 
-| Platform | Where to paste |
-|----------|---------------|
-| **claude.ai** | Projects → New Project → Set project instructions |
-| **Claude Desktop** | Projects → New Project → Set project instructions |
-| **Codex / other** | System prompt or assistant instructions |
-
-**Option B — Upload as a Skill** *(cleaner, reusable across projects)*
+**Option B — Upload skill zip** *(full install, includes file saving)*
 
 1. Download [`job-radar-skill.zip`](https://github.com/cyn-zhang/job-radar/releases) (or run `./setup --zip` if you have a terminal)
 2. Go to **Customize → Skills → Upload skill** and upload the zip
