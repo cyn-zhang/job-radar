@@ -145,7 +145,12 @@ Say "update my config", "add Brisbane to my locations", or "change my level to g
 
 Uses Gmail MCP to create digest drafts. To connect:
 
-1. Claude Code → **Settings → MCP** → Add server: `https://gmailmcp.googleapis.com/mcp/v1`
+**claude.ai / Claude Desktop**
+1. Go to **Settings → Integrations** → find Gmail → **Connect**
+2. Authenticate when prompted
+
+**Claude Code (terminal)**
+1. Run `/mcp` in the prompt → find Gmail → connect
 2. Authenticate when prompted
 
 Digests land in Gmail Drafts — open and send when ready.

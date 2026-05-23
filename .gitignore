@@ -8,3 +8,7 @@ profile/
 
 # Generated distribution zip
 job-radar-skill.zip
+
+# Local environment
+.gstack/
+.claude/settings.local.json

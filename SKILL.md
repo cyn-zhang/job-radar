@@ -234,24 +234,47 @@ Match % per role:
 
 ### Step 3 — Present Results
 
+Use this exact structure every run — do not add extra sections, urgency boxes, or duplicate tables:
+
 ```
 # {industry} Jobs — {YYYY-MM-DD}
-Level: {level} | Locations: {locations}
+Level: {level} | Work type: {work_type} | Locations: {locations joined by " | "}
+Roles: {roles joined by " | "}
 
 ## Scan Summary
-Sources: {source}: ({n} found) | ...
-Total: {X} | Eligible matches: {Y}
+| Source | Status | Notes |
+|--------|--------|-------|
+| {source} | ✅ OK / ⚠️ Partial / ❌ Failed | {notes} |
+
+Total found: {X} | Actionable (open now): {Y} | Not yet open: {Z} | Closed: {N}
+
+---
 
 ## Results
 
 | # | Company | Location | Role | Match | App Opens | App Closes | Program Dates | Source | Link |
 |---|---------|----------|------|-------|-----------|------------|---------------|--------|------|
-| 1 | {company} | {location} | {role} | {X}% | {date/—} | {date/🔴/⚠️/🟢} | {start–end} | {platform} | [Apply](...) |
+| 1 | {company} | {location} | {role} | {X}% | {date/—} | {date/🔴/⚠️/🟢} | {start–end} | {platform} | [Apply/View](...) |
 ...
 
+---
+
 ## 🔥 Top Picks
-1. **{role} @ {company}** — {why it's a strong fit, 1 sentence}
+
+1. **{role} @ {company}** — {why it's a strong fit, 1 sentence}. {call to action: "Apply today." / "Set a reminder for {date}."}
+
+---
+
+## ⚠️ Scanner Notes
+
+- {source}: {issue — blocked / 0 results / timeout / estimated deadline}
+- Scan time: ~{X} min
 ```
+
+**Key rules:**
+- Closed listings stay in the main Results table (with 🔴 Closed {date}) — do NOT move them to a separate section
+- No extra "This Week" / "Act Now" / "Urgent" boxes — urgency is conveyed by 🔴 in the table and ordering
+- Top Picks: one sentence why + one call to action. No paragraph descriptions.
 
 **Column definitions:**
 - **App Opens** — when applications open; use month/year or "Rolling" if continuous
@@ -552,37 +575,125 @@ Save to: `{base_path}{company}/{job_title}/CoverLetter_{Company}_{Role}_{date}.{
 
 ## Module 7: Digest
 
-Run Module 1, then compose for `{digest_channel}`:
+Run Module 1, then send via `{digest_channel}` MCP. Do not ask for confirmation.
 
-**Subject (Gmail):** `🎯 Job Digest {YYYY-MM-DD} | {X} roles | {Y} strong fits`
+**Subject:** `🎯 Job Digest {YYYY-MM-DD} | {X} roles | {Y} strong fits`
 
-**Body:**
+**Build the email as HTML.** Use the CSS constants below — copy them exactly, never invent new styles.
+
+### CSS constants (frozen — do not modify)
+
 ```
-Hi {name},
-
-🔥 TOP PICKS ({n} strong fits)
-──────────────────────────────
-1. {Role} @ {Company} — {Location}
-   Match: {X}% | App Closes: {date/icon} | Program: {dates} | Source: {platform}
-   Why: {1 sentence}
-   👉 {URL}
-
-📋 ALL ROLES ({X} total)
-──────────────────────────────
-| # | Company | Role | Location | Match | App Opens | App Closes | Program Dates | Link |
-
-⚠️  Scanner Notes
-──────────────────────────────
-{issues, timeouts, blocked sources — or "All sources healthy"}
-
-💡 Tip of the Day
-──────────────────────────────
-{rotating: ATS / interview / LinkedIn / networking / application strategy}
+Outer div:       font-family:Arial,sans-serif;font-size:14px;color:#222;max-width:760px;margin:auto;padding:16px
+H2 (title):      color:#1a1a2e;margin-bottom:4px
+Callout box:     background:#fff3cd;padding:10px 14px;border-left:4px solid #ffc107;margin:16px 0
+Divider:         border:none;border-top:1px solid #ddd;margin:20px 0
+TOP PICKS h3:    color:#c0392b
+TOP PICKS table: width:100%;border-collapse:collapse;font-size:13px
+TOP PICKS rows:  odd → border-bottom:1px solid #eee  |  even → border-bottom:1px solid #eee;background:#fafafa
+TOP PICKS cells: padding:8px
+ALL ROLES table: width:100%;border-collapse:collapse;font-size:11px
+ALL ROLES rows:  closed → background:#ffe0e0  |  open/rolling → background:#fff9e0  |  not yet open → background:#e8f5e9
+ALL ROLES cells: padding:5px
+Header row:      background:#f0f0f0
+Footer:          font-size:11px;color:#888
+Tip paragraph:   font-size:13px
+Scanner notes:   font-size:13px
 ```
 
-Show preview → confirm → send via `{digest_channel}` MCP.
+### Email structure
 
-> For automatic daily delivery at `{digest_time}`: set up Hermes + Claude Code cron job.
+**Outer wrapper:**
+```html
+<div dir="ltr"><u></u>
+<div style="font-family:Arial,sans-serif;font-size:14px;color:#222;max-width:760px;margin:auto;padding:16px">
+  ...content...
+</div></div>
+```
+
+**Header + intro:**
+```html
+<h2 style="color:#1a1a2e;margin-bottom:4px">🎯 Job Digest — {YYYY-MM-DD}</h2>
+<p style="margin-top:4px">Hi {name},</p>
+<p>Daily scan across {sources}. <strong>{X} roles tracked</strong> — {N} open now, {N} not yet open, {N} closed[, {N} new finds].</p>
+```
+
+**Act This Week** — include only if rolling or imminent-close roles exist:
+```html
+<p style="background:#fff3cd;padding:10px 14px;border-left:4px solid #ffc107;margin:16px 0">
+  <strong>⚡ Act this week:</strong> {1–2 sentences. Name roles, why urgent, any hard deadlines.}
+</p>
+```
+
+**Divider between every section:**
+```html
+<hr style="border:none;border-top:1px solid #ddd;margin:20px 0">
+```
+
+**TOP PICKS — open/EoI roles only (4–8 rows), no closed:**
+```html
+<h3 style="color:#c0392b">🔥 TOP PICKS — {N} strong fits</h3>
+<table style="width:100%;border-collapse:collapse;font-size:13px">
+  <tr style="background:#f0f0f0">
+    <th style="padding:8px;text-align:left">#</th>
+    <th style="padding:8px;text-align:left">Role @ Company</th>
+    <th style="padding:8px;text-align:left">Location</th>
+    <th style="padding:8px;text-align:left">Match</th>
+    <th style="padding:8px;text-align:left">Closes</th>
+    <th style="padding:8px;text-align:left">Program</th>
+    <th style="padding:8px;text-align:left">Why</th>
+    <th style="padding:8px;text-align:left">Link</th>
+  </tr>
+  <!-- odd rows: style="border-bottom:1px solid #eee" -->
+  <!-- even rows: style="border-bottom:1px solid #eee;background:#fafafa" -->
+  <!-- role cell: <td style="padding:8px"><strong>Role @ Company</strong></td> -->
+  <!-- link cell: <td style="padding:8px"><a href="URL" target="_blank">Apply</a></td> -->
+</table>
+```
+- Why cell: 1 sentence, specific — tech stack, firm prestige, program structure. No filler.
+- Link text: "Apply" if open · "EoI" if expression of interest
+
+**ALL ROLES — every listing including closed:**
+```html
+<h3>📋 ALL ROLES — {X} total</h3>
+<table style="width:100%;border-collapse:collapse;font-size:11px">
+  <tr style="background:#f0f0f0">
+    <th style="padding:5px">Company</th><th style="padding:5px">Role</th>
+    <th style="padding:5px">Location</th><th style="padding:5px">Match</th>
+    <th style="padding:5px">Closes</th><th style="padding:5px">Program</th>
+    <th style="padding:5px">Link</th>
+  </tr>
+  <!-- closed:        <tr style="background:#ffe0e0"> -->
+  <!-- open/rolling:  <tr style="background:#fff9e0"> -->
+  <!-- not yet open:  <tr style="background:#e8f5e9"> -->
+  <!-- cells: <td style="padding:5px">VALUE</td> -->
+</table>
+```
+- Link text: "Apply" · "Watch" · "EoI" · "View" by status
+- Closes icons: 🔴 Closed {date} · ⚠️ Rolling · 🟢 ~{Mon YYYY} · `DD Mon YYYY` hard date (bold if ≤30 days)
+
+**Scanner Notes:**
+```html
+<h3>⚠️ Scanner Notes</h3>
+<ul style="font-size:13px">
+  <li><strong>Company</strong>: note — per-company context, new finds (✨ new), blocked sources.</li>
+</ul>
+```
+
+**Tip of the Day:**
+```html
+<h3>💡 Tip of the Day</h3>
+<p style="font-size:13px"><strong>{Tip title}:</strong> {1 actionable paragraph tailored to roles in this scan. Rotate: quant prep / ATS / interview strategy / networking / sequencing.}</p>
+```
+
+**Footer:**
+```html
+<p style="font-size:11px;color:#888">Generated by JobRadar · {YYYY-MM-DD} · <a>View full scan</a></p>
+```
+
+---
+
+> For automatic daily delivery at `{digest_time}`: set up a Claude Code cron job.
 
 ---
 
