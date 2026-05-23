@@ -24,6 +24,8 @@ Works for any career level (intern → lead), any industry, any location.
 
 ### No terminal — claude.ai, Claude desktop, or Codex
 
+**Option A — Paste into Project Instructions** *(simplest)*
+
 1. Open `templates/job-radar-project.md` from this repo
 2. Edit the config block at the top (name, email, roles, locations)
 3. Paste the whole file into your platform's **Project Instructions** or system prompt
@@ -32,19 +34,46 @@ Works for any career level (intern → lead), any industry, any location.
 | Platform | Where to paste |
 |----------|---------------|
 | **claude.ai** | Projects → New Project → Set project instructions |
-| **Claude desktop** | Projects → New Project → Set project instructions |
-| **Cowork / other** | System prompt or assistant instructions |
+| **Claude Desktop** | Projects → New Project → Set project instructions |
+| **Codex / other** | System prompt or assistant instructions |
+
+**Option B — Upload as a Skill** *(cleaner, reusable across projects)*
+
+1. Download [`job-radar-skill.zip`](https://github.com/cyn-zhang/job-radar/releases) (or run `./setup --zip` if you have a terminal)
+2. Go to **Customize → Skills → Upload skill** and upload the zip
+3. Edit your config (name, email, roles, locations) when prompted
+4. Start chatting — "find me jobs", "evaluate this JD"
+
+| Platform | Where to upload |
+|----------|----------------|
+| **claude.ai** | Profile → Customize → Skills → Upload |
+| **Claude Desktop** | Customize → Skills → Upload |
+| **Codex** | Customize → Skills → Upload |
 
 ---
 
 ### Terminal — Claude Code
 
 **Standalone (recommended)** — a dedicated job-hunting workspace:
+
 ```bash
 git clone https://github.com/cyn-zhang/job-radar && cd job-radar && ./setup
+```
+
+```bash
+# 1. You can setup config by using command
+./setup
+# 2. You can also setup config by create config.yaml yourself
+# create config.yaml and replace example values with your personal details
+cp config.example.yaml config.yaml
+nano config.yaml # or directly create and open config.yaml to update vaules
 # drop your CV into profile/
-# create config.yaml and replace the example values with your personal details (see config.example.yaml)
-claude .    # open in Claude Code → job commands like job-digest or message like 'send me daily job digest email"
+```
+
+```bash
+# open in Claude Code and use any job commands or send message
+claude .
+/job-digest # or message like 'send me daily job digest email"
 ```
 
 **Global install** — `/job-*` commands available in every Claude Code project:
