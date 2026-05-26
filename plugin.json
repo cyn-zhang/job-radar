@@ -1,0 +1,27 @@
+{
+  "name": "job-radar",
+  "version": "1.0.0",
+  "description": "AI-powered job hunting assistant. Daily scans across Seek, LinkedIn, GradConnection and more — with CV tailoring, cover letters, gap analysis, interview prep, and a Gmail digest. Australian focus, fully configurable.",
+  "keywords": [
+    "jobs",
+    "career",
+    "internship",
+    "graduate",
+    "resume",
+    "cv",
+    "cover-letter",
+    "job-search",
+    "australia",
+    "seek",
+    "gradconnection",
+    "interview-prep",
+    "job-digest"
+  ],
+  "author": "Cynthia Zhang",
+  "license": "MIT",
+  "homepage": "https://github.com/cynthiazhang/job-radar",
+  "skills": [
+    "SKILL.md"
+  ],
+  "commands": ".claude/commands/"
+}

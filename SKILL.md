@@ -174,9 +174,11 @@ Chain naturally: JD paste → auto Module 2 → offer Module 5 → offer Module 
 Before searching, check if `scans/Jobs_{today}.md` already exists.
 
 If it does:
-> "A scan for today ({YYYY-MM-DD}) already exists. Re-run and overwrite, or view the existing results?"
+> "A scan for today ({YYYY-MM-DD}) already exists. Re-run and overwrite, append as a new run, or view existing results?"
 
-Wait for response. If user chooses to view: display the existing file. If overwrite: proceed.
+- **View**: display the existing file, stop.
+- **Overwrite**: proceed, save to `scans/Jobs_{YYYY-MM-DD}.md` (replaces existing).
+- **New run**: save to `scans/Jobs_{YYYY-MM-DD}_{HH-MM}.md` using current time (e.g. `Jobs_2026-05-26_14-32.md`). Preserves the original.
 
 ### Step 1 — Build Search Queries
 
