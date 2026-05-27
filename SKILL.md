@@ -53,36 +53,45 @@ If config.yaml is not found, ask:
 
 ## Startup Greeting
 
-```
-🎯 JobRadar — clocking in, {name}.
+**Step 1 — Load status data (silent):**
+- Read `{base_path}tracker.json` if it exists
+- Compute: `{active}` = entries with status in (watchlist, applied, oa, interview, final_round, offer)
+- Compute: `{closing_soon}` = entries where `deadline` is within 7 days and status not in (rejected, withdrawn, ghosted, accepted)
+- Compute: `{interviews}` = entries with status in (interview, final_round)
+- Read `seen.json` if it exists → get `{seen_count}` = length of hashes array
+- Check `scans/` folder → find most recent scan file → extract date as `{last_scan}`
 
-Target: {level} roles in {industry joined by " / "}
-Roles:  {roles joined by " | "}
-Where:  {locations joined by " | "}
+**Step 2 — Render greeting:**
+
+```
+🎯 JobRadar — {name}
+
+{if active > 0}
+  📊 {active} active application{s}  {if interviews > 0}· {interviews} at interview stage{end}
+  {if closing_soon entries exist}
+  ⚠️  Closing soon: {closing_soon entries as "Company — Role (deadline)"}
+  {end}
+  Last scan: {last_scan date or "never"}
+{else}
+  No applications tracked yet — run /job-scan to find your first roles.
+{end}
 
 Here's what I can do:
+🔍 /job-scan       — search all job boards + company career pages
+🧠 /job-eval       — honest fit score, ATS keywords, Bottom Line verdict
+📄 /job-cv         — tailor CV to a specific JD
+🧩 /job-gaps       — fixable gaps + hard gap interview scripts
+✉️  /job-cover      — cover letter, 4 paragraphs, role-specific
+🎤 /job-prep       — STAR behavioural + technical prep + mock interview
+📬 /job-digest     — send Gmail digest with today's top picks
+📊 /job-track      — add or update an application
+🗂️  /job-status     — full dashboard of all applications
+⚙️  /job-setup      — update config (roles, locations, level, companies)
 
-🔍 Daily Job Scan        — major job boards + company career pages
-🧠 JD Evaluation         — honest fit scoring, ATS keywords, Bottom Line verdict
-📄 CV Tailoring          — strongest evidence mapped to JD, no fabrication
-🧩 Gap Analysis          — fixable gaps with CV lines; hard gaps with interview scripts
-✉️ Cover Letter          — 4 paragraphs, role-specific, never generic
-🎤 Interview Prep        — STAR behavioural + technical questions + mock interview mode
-📬 Gmail Digest          — daily email with top picks and full results table → {email}
-📊 Application Tracker   — track status from applied → offer; auto-updated from chat
-🗂️ Status Dashboard      — summary of all active applications, offers, and next actions
-⚙️ Update Config         — change roles, locations, level, or companies in chat
-
-──────────────────────────────
-📂 Active Applications
-──────────────────────────────
-[list {company}/{role} folders under {base_path} if accessible]
-
-What would you like to do?
-• 🔍 Scan today's roles
-• 📋 Evaluate a JD (paste it or drop a link)
-• 📄 Tailor CV for a specific role
+What's first?
 ```
+
+**Conciseness rule:** if `{active}` = 0 and `{last_scan}` = "never", skip the stats block entirely and go straight to the command list. Don't pad with zeros.
 
 ---
 
@@ -92,7 +101,8 @@ All files saved under `{base_path}`:
 
 ```
 {base_path}
-├── tracker.md                                    ← application status tracker
+├── tracker.json                                  ← application tracker (source of truth)
+├── tracker.md                                    ← auto-generated view (do not edit)
 ├── scans/
 │   └── Jobs_YYYY-MM-DD.md                        ← daily scan results
 └── {company}/
@@ -180,6 +190,25 @@ If it does:
 - **Overwrite**: proceed, save to `scans/Jobs_{YYYY-MM-DD}.md` (replaces existing).
 - **New run**: save to `scans/Jobs_{YYYY-MM-DD}_{HH-MM}.md` using current time (e.g. `Jobs_2026-05-26_14-32.md`). Preserves the original.
 
+### Step 0.5 — Load Dedup Index
+
+Load `seen.json` from the project root.
+
+If file doesn't exist, initialise in memory (do not write yet):
+```json
+{ "last_updated": "{today}", "hashes": [] }
+```
+
+**Fingerprint format** — one string per listing, built at search time:
+- Primary (when URL is available): `{source_key}|{url}` — e.g. `seek|https://www.seek.com.au/job/78291047`
+- Fallback (no URL): `{source_key}|{company-slug}|{role-slug}` — e.g. `linkedin|atlassian|swe-intern-2026`
+
+Source keys: `seek`, `linkedin`, `gradconnection`, `indeed`, `company`, `aus_internship_finder`
+
+Slugs: lowercase, hyphens only, drop punctuation. `"SWE Intern 2026/27"` → `swe-intern-2026`.
+
+Store the loaded hash set in memory for Step 2 filtering.
+
 ### Step 1 — Build Search Queries
 
 For each role in `{roles}` and each location in `{locations}`, build queries dynamically.
@@ -230,14 +259,26 @@ Include roles mentioning any keyword in `{eligible_majors}`. Skip roles requirin
 **Exclude filter (if `{exclude_companies}` not empty):**
 Remove any listing where the company matches an entry in `{exclude_companies}`. Do this silently — don't list excluded results.
 
-### Step 2 — Score Each Listing
+### Step 2 — Score and Deduplicate
 
-Match % per role:
+For each listing found across all sources:
+
+**2a — Build fingerprint** using the format defined in Step 0.5.
+
+**2b — Dedup check:**
+- If the fingerprint exists in the loaded hash set → mark listing as `[seen]`, exclude from Results table.
+- If not in hash set → mark as `[new]`, include in Results table.
+- Track all `[new]` fingerprints in a separate list for Step 4.
+
+**2c — Score each `[new]` listing:**
 - Role title matches `{roles}` → base score
 - Location matches `{locations}` → weight
 - Eligibility matches `{eligible_majors}` → weight (skip if empty)
 - Industry alignment with `{industry}` → bonus
 - Tech stack/skill overlap with CV → bonus (if CV loaded)
+
+**2d — Report dedup stats** in the Scan Summary table:
+`{X} new | {Y} already seen (hidden)` — so user knows what was filtered.
 
 ### Step 3 — Present Results
 
@@ -253,7 +294,7 @@ Roles: {roles joined by " | "}
 |--------|--------|-------|
 | {source} | ✅ OK / ⚠️ Partial / ❌ Failed | {notes} |
 
-Total found: {X} | Actionable (open now): {Y} | Not yet open: {Z} | Closed: {N}
+Total found: {X} | New: {N} | Already seen: {S} (hidden) | Actionable (open now): {Y} | Not yet open: {Z} | Closed: {C}
 
 ---
 
@@ -302,15 +343,28 @@ Total found: {X} | Actionable (open now): {Y} | Not yet open: {Z} | Closed: {N}
 
 Sort by App Closes ascending (soonest first), with 🔴 at top, then ⚠️, then 🟢 at bottom.
 
-### Step 4 — Save + Flag Issues
+### Step 4 — Save Scan + Update Dedup Index
 
-Save to: `scans/Jobs_{YYYY-MM-DD}.md`
+**4a — Save scan file** to: `scans/Jobs_{YYYY-MM-DD}.md` (or timestamped variant per Step 0).
 
-Report issues proactively:
+**4b — Update seen.json:**
+- Take the list of `[new]` fingerprints collected in Step 2.
+- Append them to the `hashes` array in the loaded seen.json object.
+- Set `last_updated` to today.
+- Write the full updated object back to `seen.json`.
+- Do not deduplicate the hashes array itself — duplicates are harmless and writes are faster.
+
+**4c — Confirm:**
+```
+✅ Scan saved → scans/Jobs_{YYYY-MM-DD}.md
+✅ seen.json updated — {N} new fingerprints added ({total} total)
+```
+
+Report source issues proactively:
 ```
 ⚠️  Scanner Notes
 - {source}: {issue — blocked / 0 results / timeout}
-- Scan time: {X}s
+- Scan time: ~{X} min
 ```
 
 Offer: "Want me to evaluate any of these JDs, or tailor your CV for a top pick?"
@@ -724,54 +778,113 @@ Example triggers:
 
 ## Module 9: Application Tracker
 
-Track every application in `{base_path}tracker.md`.
+Source of truth: `{base_path}tracker.json`. `tracker.md` is a read-only view — always generated from JSON, never edited directly.
 
-### Tracker format
+### tracker.json structure
+
+```json
+{
+  "last_updated": "YYYY-MM-DD",
+  "applications": [
+    {
+      "id": "atlassian-swe-intern-2026",
+      "company": "Atlassian",
+      "role": "SWE Intern 2026/27",
+      "location": "Sydney",
+      "status": "applied",
+      "applied_date": "2026-05-01",
+      "deadline": "2026-06-30",
+      "source": "GradConnection",
+      "url": "https://au.gradconnection.com/...",
+      "match_score": 90,
+      "next_step": "Wait for response",
+      "outcome": null,
+      "notes": ""
+    }
+  ]
+}
+```
+
+**Status enum** (machine values — map from user language):
+- `watchlist` — saved, not yet applied
+- `applied` — submitted, waiting
+- `oa` — online assessment / take-home in progress
+- `interview` — interview scheduled or in progress
+- `final_round` — final interview stage
+- `offer` — received offer
+- `accepted` — offer accepted
+- `rejected` — application unsuccessful
+- `withdrawn` — withdrew application
+- `ghosted` — no response in 4+ weeks
+
+**ID generation:** lowercase hyphenated slug — `{company}-{role-keywords}-{year}`. Keep short and unique. Example: `atlassian-swe-intern-2026`, `canva-product-eng-intern-2026`.
+
+### Tracker operations
+
+**Step 1 — Load tracker.json:**
+- Read `{base_path}tracker.json`
+- If file doesn't exist, initialise: `{"last_updated": "{today}", "applications": []}`
+
+**Step 2 — Add or update:**
+
+*Add new application:*
+- Generate an `id` slug from company + role + year
+- Create a new entry with `status: "applied"`, `applied_date: today`, and all known fields
+- For any unknown field (source, url, match_score, deadline) set to `null`
+- Append to `applications` array
+
+*Update existing application:*
+- Find entry by matching `company` (case-insensitive) + `role` (partial match OK)
+- Update only the fields the user mentioned: `status`, `next_step`, `notes`, `outcome`, `deadline`
+- Leave all other fields unchanged
+
+**Step 3 — Write tracker.json:**
+- Set `last_updated` to today
+- Write the full updated JSON back to `{base_path}tracker.json`
+
+**Step 4 — Regenerate tracker.md:**
+- Generate `{base_path}tracker.md` from the current tracker.json data
+- Format:
 
 ```markdown
 # Application Tracker
 Last updated: {YYYY-MM-DD}
+> Auto-generated from tracker.json — do not edit directly.
 
 | # | Company | Role | Location | Status | Applied | Deadline | Next Step | Notes |
 |---|---------|------|----------|--------|---------|----------|-----------|-------|
-| 1 | Atlassian | SWE Intern | Sydney | 🟡 Applied | 2026-05-01 | 2026-06-30 | Wait for response | |
-| 2 | Canva | Product Eng Intern | Sydney | 🟢 Interview | 2026-04-15 | — | Prepare for tech screen | Fri 2pm |
-| 3 | Google | SWE Intern | Remote | 🔴 Rejected | 2026-03-10 | — | — | OA not passed |
-| 4 | Optiver | Quant Intern | Sydney | 🏆 Offer | 2026-02-01 | — | Decide by 2026-06-01 | |
+| 1 | Atlassian | SWE Intern 2026/27 | Sydney | 🟡 Applied | 2026-05-01 | 2026-06-30 | Wait for response | |
 ```
 
-**Status icons:**
-- 🟡 Applied — submitted, waiting
-- 🔵 OA / Assessment — online assessment or take-home task in progress
-- 🟢 Interview — interview scheduled or in progress
-- 🟠 Final Round — final interview stage
-- 🏆 Offer — received offer
-- ✅ Accepted — offer accepted
-- 🔴 Rejected — application unsuccessful
-- ⏸️ Withdrawn — withdrew application
-- 💤 Ghosted — no response in 4+ weeks
+Status icon mapping for tracker.md display:
+- `watchlist` → 👁️ Watchlist
+- `applied` → 🟡 Applied
+- `oa` → 🔵 Assessment
+- `interview` → 🟢 Interview
+- `final_round` → 🟠 Final Round
+- `offer` → 🏆 Offer
+- `accepted` → ✅ Accepted
+- `rejected` → 🔴 Rejected
+- `withdrawn` → ⏸️ Withdrawn
+- `ghosted` → 💤 Ghosted
 
-### Tracker operations
+Sort order in tracker.md: active first (watchlist → applied → oa → interview → final_round → offer), then closed (accepted → rejected → withdrawn → ghosted).
 
-**Add new application:**
-- Append a new row with status 🟡 Applied
-- Set Applied date to today
-- If the application has a known deadline, populate it
-
-**Update status:**
-- Find the row by company + role
-- Update Status, Next Step, and Notes fields
-- Update Last updated date
-
-**If `tracker.md` doesn't exist:** create it with the header and an empty table.
-
-Always confirm: `✅ Tracker updated → {base_path}tracker.md`
+Always confirm: `✅ Tracker updated → {base_path}tracker.json (tracker.md regenerated)`
 
 ---
 
 ## Module 10: Application Status
 
-Read `{base_path}tracker.md` and present a dashboard:
+Read `{base_path}tracker.json` (not tracker.md) and present a live dashboard.
+
+**Step 1 — Load:** Read `{base_path}tracker.json`. If missing: "No applications tracked yet. Say 'I applied to [company]' to start." Stop.
+
+**Step 2 — Compute stats:**
+- Total, Active (non-closed statuses), Interview (interview + final_round), Offers (offer + accepted), Closed (rejected + withdrawn + ghosted)
+- Stale: entries where applied_date is 14+ days ago and status is still `applied` or `oa`
+
+**Step 3 — Present dashboard:**
 
 ```
 # Application Status — {name} — {YYYY-MM-DD}
@@ -780,25 +893,29 @@ Read `{base_path}tracker.md` and present a dashboard:
 Total: {n} | Active: {n} | Interview: {n} | Offers: {n} | Closed: {n}
 
 ## 🏆 Offers
-{rows with 🏆 Offer or ✅ Accepted status}
+{entries with status offer or accepted — show company, role, deadline, next_step}
 
-## 🟢 Interviews / Active
-{rows with 🟢 Interview or 🟠 Final Round}
+## 🟢 Interviews / Final Round
+{entries with status interview or final_round — sorted by deadline asc}
 
 ## 🟡 Applied — Waiting
-{rows with 🟡 Applied or 🔵 OA status}
+{entries with status applied or oa — sorted by applied_date asc}
+
+## 👁️ Watchlist
+{entries with status watchlist}
 
 ## ⚠️ Needs Attention
-{rows with no activity in 14+ days — flag for follow-up or close}
+{stale entries — no status change in 14+ days; flag for follow-up or close}
 
 ## 🔴 Closed
-{rows with Rejected / Withdrawn / Ghosted — collapsed, show count}
+Rejected: {n} | Withdrawn: {n} | Ghosted: {n}
+(type /job-status closed to see full list)
 ```
 
-**Deadlines:** flag 🔴 any offer decision deadline within 7 days.
-**Recommended next action:** one sentence based on current state.
+**Deadlines:** flag 🔴 any `deadline` or offer decision within 7 days.
+**Recommended next action:** one sentence based on current state (e.g. "You have 2 interviews this week — focus on prep.")
 
-If tracker doesn't exist: "No applications tracked yet. Say 'I applied to [company]' to start."
+If an entry has `match_score`, show it as a small indicator: `[90%]`.
 
 ---
 
