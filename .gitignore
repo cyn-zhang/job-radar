@@ -12,3 +12,8 @@ job-radar-skill.zip
 # Local environment
 .gstack/
 .claude/settings.local.json
+
+# Internal only — not published with the skill
+docs/
+pm/
+

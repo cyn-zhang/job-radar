@@ -1,6 +1,14 @@
 ---
-description: Show application tracker dashboard
+name: "source-command-job-status"
+description: "Show application tracker dashboard"
 ---
+
+# source-command-job-status
+
+Use this skill when the user asks to run the migrated source command `job-status`.
+
+## Command Template
+
 Show a summary of all active job applications using JobRadar. Load config from config.yaml, then follow Module 10 in SKILL.md.
 
 Read `applications/tracker.json` (source of truth) and present:

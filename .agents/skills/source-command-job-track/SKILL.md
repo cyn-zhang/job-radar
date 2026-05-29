@@ -1,6 +1,14 @@
 ---
-description: Add or update an application in the tracker
+name: "source-command-job-track"
+description: "Add or update an application in the tracker"
 ---
+
+# source-command-job-track
+
+Use this skill when the user asks to run the migrated source command `job-track`.
+
+## Command Template
+
 Update the application tracker using JobRadar. Load config from config.yaml, then follow Module 9 in SKILL.md.
 
 Source of truth is `applications/tracker.json`. `applications/tracker.md` is auto-regenerated — never edit it directly.
