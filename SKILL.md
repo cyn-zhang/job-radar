@@ -49,6 +49,40 @@ Extract:
 If config.yaml is not found, ask:
 > "I couldn't find config.yaml. Would you like me to create one? Just tell me your name, target roles, locations, and career level."
 
+### Step 0.1 — Validate Config
+
+After loading, validate before proceeding. Check every rule below. If **any** rule fails, stop and output the full error block — do not attempt to run the requested module.
+
+**Required fields (must be present and non-empty):**
+- `hunter.name` — non-empty string
+- `hunter.email` — non-empty string, contains `@`
+- `hunter.level` — must be one of: `intern | graduate | junior | mid | senior | lead | manager | director | vp | executive`
+- `hunter.roles` — non-empty list (at least 1 entry)
+- `hunter.locations` — non-empty list (at least 1 entry)
+- `hunter.industry` — non-empty list; each entry must be one of: `tech | finance | accounting | consulting | healthcare | government | education | energy | retail | legal | marketing | hr | construction | manufacturing | any`
+- `hunter.work_type` — must be one of: `internship | graduate | contract | permanent | any`
+- `hunter.base_path` — non-empty string, should end with `/`
+
+**Optional but typed (validate if present):**
+- `hunter.sources` — if present, must be a map; each value must be `true` or `false`
+- `hunter.digest_time` — if present, must match `HH:MM` format (24h)
+- `hunter.digest_channel` — if present, must be one of: `gmail | slack | none`
+- `hunter.cv_format` — if present, must be one of: `docx | pdf`
+- `hunter.cover_letter_format` — if present, must be one of: `docx | pdf`
+
+**Error output format:**
+```
+❌ config.yaml has errors — fix these before running JobRadar:
+
+  • hunter.level: "senoir" is not a valid level. Must be one of: intern | graduate | junior | mid | senior | lead | manager | director | vp | executive
+  • hunter.industry: "fintech" is not a valid industry. Must be one of: tech | finance | ...
+  • hunter.roles: is empty — add at least one target role
+
+Run /job-setup to fix your config interactively, or edit config.yaml directly.
+```
+
+If validation passes, proceed silently — no success message.
+
 ---
 
 ## Startup Greeting
