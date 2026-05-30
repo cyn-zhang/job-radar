@@ -123,6 +123,7 @@ Here's what I can do:
 🧩 /job-gaps       — fixable gaps + hard gap interview scripts
 ✉️  /job-cover      — cover letter, 4 paragraphs, role-specific
 🎤 /job-prep       — STAR behavioural + technical prep + mock interview
+📝 /job-oa         — OA prep: coding, video interview, psychometric, case study
 📬 /job-digest     — send Gmail digest with today's top picks
 📊 /job-track      — add or update an application
 🗂️  /job-status     — full dashboard of all applications
@@ -197,6 +198,7 @@ All files saved under `{base_path}`:
 | `/job-cv` | Tailor CV for a role |
 | `/job-cover` | Write a cover letter |
 | `/job-prep` | Interview prep + mock interview |
+| `/job-oa` | OA prep — coding, video, psychometric, case study |
 | `/job-track` | Add or update an application in the tracker |
 | `/job-status` | Summary of all active applications |
 | `/job-network` | Alumni map + personalised outreach drafts |
@@ -1243,6 +1245,151 @@ Subject: {subject}
 ---
 Send this? Once you've sent it, tell me and I'll update your tracker.
 ```
+
+---
+
+## Module 13: OA Preparation
+
+Triggered by `/job-oa` or when user says "OA prep", "online assessment", "coding test", "HireVue", "psychometric", "aptitude test".
+
+### Step 1 — Detect OA Type from JD
+
+Read the JD (from `jd.md` or pasted content). Identify signals:
+
+| OA Type | JD Signals |
+|---------|-----------|
+| **Coding** | "HackerRank", "Codility", "LeetCode", "algorithms", "data structures", "take-home coding" |
+| **Video Interview** | "HireVue", "Sonru", "video screening", "async interview", "recorded responses" |
+| **Psychometric** | "aptitude", "numerical reasoning", "verbal reasoning", "abstract reasoning", "SHL", "Revelian", "Criteria Corp" |
+| **Case Study** | "case study", "business case", "written analysis", "consulting", "strategy" |
+| **Work Simulation** | "realistic job preview", "work sample", "situational judgement", "SJT" |
+| **Written Assessment** | "written response", "policy brief", "analysis task", "essay" |
+
+If signals are ambiguous, ask: "Do you know what type of OA this is? (coding / video / psychometric / case study / other)"
+
+### Step 2 — Generate Prep Plan
+
+**Coding OA:**
+```
+🖥️  Coding Assessment Prep — {company} · {role}
+
+Predicted type: {platform if detectable, e.g. HackerRank}
+Time limit: typically 60–90 min | 2–3 problems
+
+Focus areas (based on JD):
+  {extracted from JD — e.g. "arrays, hashmaps, SQL queries"}
+
+This week's practice plan:
+  Day 1–2  Easy problems — warm up on arrays, strings, loops
+  Day 3–4  Medium problems — focus on {JD-specific topic}
+  Day 5    Timed mock — simulate real conditions (no hints, timer on)
+
+Recommended resources:
+  LeetCode: leetcode.com (filter by company if premium)
+  NeetCode 150: neetcode.io — curated list, free
+  HackerRank practice: hackerrank.com/domains/algorithms
+
+Tips:
+  • Talk through your approach before coding
+  • Handle edge cases: empty input, null, duplicates
+  • Test with examples from the problem before submitting
+```
+
+**Video Interview (HireVue / Sonru):**
+```
+🎥  Video Interview Prep — {company} · {role}
+
+Format: async — you record responses, no live interviewer
+Typical structure: 3–5 questions, 30–90 sec prep, 1–3 min response
+
+Common question types:
+  • "Tell me about yourself" — 90 sec elevator pitch
+  • "Why {company}?" — 2-3 specific reasons
+  • "Tell me about a time you..." — STAR format
+  • Situational: "What would you do if..." — use action-oriented language
+
+Prep tips:
+  • Record yourself once — watch it back, fix filler words
+  • Look at the camera, not the screen
+  • Good lighting + quiet background
+  • Dress as you would for an in-person interview
+
+5 practice questions for this role:
+  {generate 5 STAR-style questions based on JD soft skill signals}
+```
+
+**Psychometric / Aptitude:**
+```
+📊  Psychometric Test Prep — {company} · {role}
+
+Predicted platform: {SHL / Revelian / Criteria / unknown}
+Sections typically included: numerical · verbal · abstract reasoning
+
+Practice resources (free):
+  SHL practice: shldirect.com/en/practice-tests
+  Revelian: revelian.com/sample-tests
+  JobTestPrep: jobtestprep.com.au (paid, worth it for Big 4 / banks)
+  Assessment Day: assessmentday.co.uk/aptitudetests (free samples)
+
+Tips:
+  • Speed matters — don't dwell; mark and move
+  • Numerical: calculator usually allowed; practise reading charts fast
+  • Verbal: read the passage first, then the question
+  • Abstract: look for rotation, reflection, number of shapes, colour patterns
+
+Recommended daily practice: 20 min × 5 days before the test
+```
+
+**Case Study:**
+```
+📋  Case Study Prep — {company} · {role}
+
+Format: written analysis, usually 1–3 hours, submitted as PDF or Word doc
+
+Structure your response:
+  1. Problem statement (2-3 sentences — what is the core issue?)
+  2. Key findings (bullet points — data from the case)
+  3. Options considered (2-3, with pros/cons)
+  4. Recommendation (clear, justified, with implementation steps)
+  5. Risks and mitigations
+
+Tips:
+  • Structure first, write second — spend 20% of time on outline
+  • Use numbers wherever possible — be specific
+  • Show you considered multiple options before recommending
+  • Proofread — consulting firms penalise sloppy writing
+
+Practice case: {suggest a free McKinsey / BCG / Deloitte sample case relevant to the industry}
+```
+
+**Work Simulation / SJT:**
+```
+🎯  Situational Judgement Prep — {company} · {role}
+
+Format: scenario-based — pick the best/worst response from options
+Measures: judgment, values alignment, professional behaviour
+
+How to approach:
+  • Think: "What would an ideal employee at this company do?"
+  • Prioritise: safety → stakeholders → task completion → efficiency
+  • Avoid: extreme responses, blame, ignoring others
+
+Practice: jobtestprep.com.au/situational-judgement-tests
+```
+
+### Step 3 — Deadline Alert
+
+Check tracker.json for the application. If `deadline` is within 7 days:
+```
+⚠️  OA deadline in {n} days — {date}. Start prep today.
+```
+
+If `interview_date` is set, count backwards and flag if < 3 days of prep time remain.
+
+### Step 4 — Update Tracker
+
+After generating prep plan, ask: "Want me to log this in your tracker as OA in progress?"
+If yes: update application status to `oa`, set `next_step` to "Complete OA by {deadline}".
 
 ---
 
