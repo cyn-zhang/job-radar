@@ -17,9 +17,11 @@ Works for any level (intern → executive), any industry, any location. Australi
 | ✉️ Cover letter | 4 paragraphs, role-specific, never generic |
 | 🎤 Interview prep | STAR behavioural + technical questions, mock interview mode |
 | 📬 Gmail digest | Daily email with top picks and full results table |
-| 📊 Application tracker | Track status from applied → offer |
+| 📊 Application tracker | Track status from applied → offer, with outcome recording |
 | 🗂️ Status dashboard | Active applications, deadlines, closing-soon alerts |
 | 🤝 Alumni networking | Map where alumni work and draft personalised outreach |
+| 📝 OA prep | Detect assessment type from JD, generate targeted practice plan |
+| ✉️ Follow-up emails | Auto-draft follow-ups after 14 days silence, thank-you after interview |
 
 ---
 
@@ -87,6 +89,8 @@ Update any field in chat: "add Brisbane to my locations", "change my level to gr
 | `/job-track` | Add or update an application |
 | `/job-status` | Dashboard of all active applications |
 | `/job-network` | Alumni map + personalised outreach drafts |
+| `/job-followup` | Draft follow-up or thank-you emails |
+| `/job-oa` | OA prep — coding, video, psychometric, case study |
 | `/job-setup` | Create or update your config |
 
 Or just talk naturally — "find me jobs", "evaluate this JD", "I applied to Atlassian".
