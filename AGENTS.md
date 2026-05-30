@@ -45,6 +45,29 @@ MCP: https://gmailmcp.googleapis.com/mcp/v1
 Daily digest at 9am:
 0 9 * * * cd /path/to/job-radar && claude -p "run daily job scan and send Gmail digest" --model claude-haiku-4-5-20251001
 
+## Commands
+| Command | Module | What it does |
+|---------|--------|-------------|
+| /job-scan | 1 | Scan all sources → save results, update seen.json dedup |
+| /job-eval | 2 | Evaluate a JD (paste or link) |
+| /job-gaps | 5 | Coverage map + gap analysis + recruiter view |
+| /job-cv | 3 | Tailor CV for a role |
+| /job-cover | 4 | Write a cover letter |
+| /job-prep | 6 | Interview prep + mock interview |
+| /job-digest | 7 | Scan + send Gmail digest |
+| /job-setup | 8 | Create or update config.yaml |
+| /job-track | 9 | Add or update an application in tracker.json |
+| /job-status | 10 | Dashboard of all active applications |
+| /job-network | 11 | Alumni map (--map) + personalised outreach (--reach) |
+| /job-followup | 12 | Draft follow-up or thank-you emails |
+| /job-oa | 13 | OA prep — coding, video, psychometric, case study, SJT |
+
+## Data Files
+- `applications/tracker.json` — source of truth for all applications + networking[] outreach log
+- `seen.json` — scan dedup index (fingerprint by source+URL)
+- `networking/alumni_map.json` — alumni data from /job-network --map (gitignored)
+- `networking/benchmark_*.json` — career intelligence results from /job-benchmark (gitignored, Sprint 3)
+
 ## Behaviour
 - Save jd.md immediately on any JD paste — before analysis
 - Bottom Line table mandatory on every JD evaluation
@@ -52,5 +75,6 @@ Daily digest at 9am:
 - Flag 🔴 anything closing within 7 days
 - Always offer next step after each module
 - Never pad or fabricate experience in CV or cover letter
-
-## Imported Claude Cowork project instructions
+- /job-followup: never send automatically — draft only; trigger stale alert after 14 days in applied/oa status
+- /job-network: gitignore networking/ folder; write outreach log to tracker.json networking[] array
+- tracker.json status flow: applied → oa → interview → offer → accepted/rejected/withdrawn
