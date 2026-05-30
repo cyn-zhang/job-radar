@@ -5,6 +5,7 @@ config.yaml
 applications/
 scans/
 profile/
+networking/
 
 # Generated distribution zip
 job-radar-skill.zip
@@ -16,4 +17,3 @@ job-radar-skill.zip
 # Internal only — not published with the skill
 docs/
 pm/
-

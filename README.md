@@ -19,6 +19,7 @@ Works for any level (intern → executive), any industry, any location. Australi
 | 📬 Gmail digest | Daily email with top picks and full results table |
 | 📊 Application tracker | Track status from applied → offer |
 | 🗂️ Status dashboard | Active applications, deadlines, closing-soon alerts |
+| 🤝 Alumni networking | Map where alumni work and draft personalised outreach |
 
 ---
 
@@ -64,6 +65,9 @@ Key fields:
 | `hunter.industry` | `["tech"]` — or `["any"]` for no filter |
 | `hunter.work_type` | `internship` / `graduate` / `contract` / `permanent` / `any` |
 | `hunter.target_companies` | Companies to check career pages directly |
+| `hunter.university` | `University of Melbourne` |
+| `hunter.majors` | `["Computer Science", "Software Engineering"]` |
+| `hunter.graduation_year` | `2025` |
 
 Update any field in chat: "add Brisbane to my locations", "change my level to graduate".
 
@@ -82,6 +86,7 @@ Update any field in chat: "add Brisbane to my locations", "change my level to gr
 | `/job-digest` | Scan + send Gmail digest |
 | `/job-track` | Add or update an application |
 | `/job-status` | Dashboard of all active applications |
+| `/job-network` | Alumni map + personalised outreach drafts |
 | `/job-setup` | Create or update your config |
 
 Or just talk naturally — "find me jobs", "evaluate this JD", "I applied to Atlassian".
@@ -117,8 +122,11 @@ job-radar/
 │   └── {Company}/{Role}/     ← per-application files
 ├── scans/                    ← daily scan results (gitignored)
 ├── seen.json                 ← scan dedup index (gitignored)
+├── networking/               ← alumni maps and profile context (gitignored)
 └── profile/                  ← your CV (gitignored)
 ```
+
+Outreach state is tracked in `applications/tracker.json` under `networking[]`; raw alumni maps stay in `networking/` and are never committed.
 
 ---
 

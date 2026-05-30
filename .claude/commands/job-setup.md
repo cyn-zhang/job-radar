@@ -20,6 +20,7 @@ Current settings:
   Roles:     {hunter.roles joined by ", "}
   Locations: {hunter.locations joined by ", "}
   Industry:  {hunter.industry joined by ", "}
+  University:{hunter.university or "not set"}
 
 Want to:
   1) Keep it as-is and start scanning → /job-scan
@@ -51,6 +52,39 @@ What email should we send your daily job digest to?
 ```
 
 Wait. Save as `{email}`.
+
+---
+
+## Step 2.5 — Alumni networking profile
+
+Ask these three short questions. These fields power `/job-network`; users may skip them and add them later.
+
+```
+For alumni networking, what university or school should I search from?
+
+Example: University of Melbourne
+Press Enter to skip for now.
+```
+
+Wait. Save as `{university}`. If skipped, save as an empty string.
+
+```
+What majors or fields of study should count as close matches?
+
+Examples: Computer Science, Software Engineering, Information Technology
+Press Enter to skip for now.
+```
+
+Wait. Parse into a list as `{majors}`. If skipped, save as an empty list.
+
+```
+What graduation year should I search around?
+
+Example: 2025
+Press Enter to skip for now.
+```
+
+Wait. Save as `{graduation_year}` as an integer if provided. If skipped, save as `null`.
 
 ---
 
@@ -204,6 +238,10 @@ Once all answers are collected, write `config.yaml` with this exact structure:
 hunter:
   name: "{name}"
   email: "{email}"
+
+  university: "{university}"
+{if majors empty, write "  majors: []"; otherwise write "  majors:" followed by each major as "    - \"{major}\""}
+  graduation_year: {graduation_year or "null"}
 
   level: "{level}"
 
