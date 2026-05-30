@@ -31,19 +31,19 @@ scans/Jobs_{YYYY-MM-DD}.md
 - Company career pages: see config.yaml target_companies
 
 ## Browsing
-If gstack is installed (`.Codex/skills/gstack/`), use `/browse` for all web browsing — it handles JavaScript-rendered pages and sites that block WebFetch (LinkedIn, some company career pages).
+If gstack is installed (`.claude/skills/gstack/`), use `/browse` for all web browsing — it handles JavaScript-rendered pages and sites that block WebFetch (LinkedIn, some company career pages).
 If gstack is not available, fall back to WebSearch + WebFetch. Flag any sources that return 403 or no results in the scanner notes.
 
 ## Models
-- Job scan, JD analysis, gap analysis, digest → Codex-haiku-4-5-20251001
-- CV writing, cover letter → Codex-sonnet-4-6
+- Job scan, JD analysis, gap analysis, digest → claude-haiku-4-5-20251001
+- CV writing, cover letter → claude-sonnet-4-6
 
 ## Gmail
 MCP: https://gmailmcp.googleapis.com/mcp/v1
 
 ## Cron
 Daily digest at 9am:
-0 9 * * * cd /path/to/job-radar && Codex -p "run daily job scan and send Gmail digest" --model Codex-haiku-4-5-20251001
+0 9 * * * cd /path/to/job-radar && claude -p "run daily job scan and send Gmail digest" --model claude-haiku-4-5-20251001
 
 ## Behaviour
 - Save jd.md immediately on any JD paste — before analysis
