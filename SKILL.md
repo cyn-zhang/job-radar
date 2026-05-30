@@ -844,6 +844,11 @@ Source of truth: `{base_path}tracker.json`. `tracker.md` is a read-only view —
       "match_score": 90,
       "next_step": "Wait for response",
       "outcome": null,
+      "outcome_date": null,
+      "interview_date": null,
+      "offer_deadline": null,
+      "rejection_reason": null,
+      "start_date": null,
       "notes": ""
     }
   ],
@@ -909,6 +914,22 @@ Source of truth: `{base_path}tracker.json`. `tracker.md` is a read-only view —
 - Find entry by matching `company` (case-insensitive) + `role` (partial match OK)
 - Update only the fields the user mentioned: `status`, `next_step`, `notes`, `outcome`, `deadline`
 - Leave all other fields unchanged
+
+**Status transition rules — auto-populate on status change:**
+
+| New status | Auto-set fields | Ask user (if not provided) |
+|------------|----------------|---------------------------|
+| `applied` | `applied_date: today` | — |
+| `oa` | `next_step: "Complete assessment"` | deadline if not set |
+| `interview` | `next_step: "Prepare for interview"` | `interview_date` |
+| `final_round` | `next_step: "Final round prep"` | `interview_date` |
+| `offer` | `outcome: "offer received"`, `outcome_date: today` | `offer_deadline` |
+| `accepted` | `outcome: "accepted"`, `outcome_date: today` | `start_date` |
+| `rejected` | `outcome: "rejected"`, `outcome_date: today` | `rejection_reason` (optional — "no reason given" if skipped) |
+| `withdrawn` | `outcome: "withdrawn"`, `outcome_date: today` | — |
+| `ghosted` | `outcome: "no response"`, `outcome_date: today` | — |
+
+After a terminal status (`accepted`, `rejected`, `withdrawn`, `ghosted`), suggest: `💡 Want to run /job-followup to send a thank-you or follow-up email?`
 
 **Step 3 — Write tracker.json:**
 - Set `last_updated` to today
@@ -1161,6 +1182,67 @@ Generate:
 - 1 intro sentence
 - 1 graceful referral ask for the end of the conversation
 - 1 thank-you follow-up message
+
+---
+
+## Module 12: Follow-up & Thank-you Emails
+
+Triggered by `/job-followup` or when user says "send a follow-up", "write a thank-you", "follow up on my application", "14 days no response".
+
+### Two modes
+
+**Mode A — Follow-up after no response (applied / oa stage)**
+
+Trigger conditions:
+- User asks to follow up on a specific application, OR
+- `/job-status` detects an entry stale for 14+ days with status `applied` or `oa`
+
+Steps:
+1. Load tracker.json, find the application
+2. Check days since `applied_date` — if < 7 days, advise waiting
+3. Generate a short, professional follow-up email:
+   - Subject: `Following up — {role} application`
+   - Body: 3 sentences max — reference application, express continued interest, polite ask for update
+   - Tone: confident, not apologetic
+4. Present draft, ask user to confirm before sending
+5. If user confirms sent: update `next_step` in tracker.json to "Awaiting response after follow-up"
+
+**Mode B — Thank-you after interview**
+
+Trigger conditions:
+- User says "thank-you email", "send thanks after interview", or status just changed to `interview` / `final_round`
+
+Steps:
+1. Load tracker.json, find the application
+2. Ask: "Who did you interview with? Any specific topics to reference?"
+3. Generate thank-you email:
+   - Subject: `Thank you — {role} interview`
+   - Body: 4 sentences — thank interviewer by name, reference one specific topic from the interview, restate enthusiasm, close lightly
+   - Tone: warm, specific, not generic
+4. Present draft for user review — never send automatically
+5. If user confirms sent: update `next_step` to "Thank-you sent, awaiting next steps"
+
+### Stale alert integration
+
+When `/job-status` or startup greeting detects stale applications (14+ days, status `applied` or `oa`):
+
+```
+⚠️  {company} — {role}: applied {n} days ago, no update
+    → Run /job-followup to draft a follow-up email
+```
+
+### Output format
+
+```
+✉️  Follow-up draft — {company} · {role}
+
+Subject: {subject}
+
+{body}
+
+---
+Send this? Once you've sent it, tell me and I'll update your tracker.
+```
 
 ---
 
