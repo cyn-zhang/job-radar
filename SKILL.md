@@ -29,6 +29,9 @@ Extract:
 ```
 {name}              ← hunter.name
 {email}             ← hunter.email
+{university}        ← hunter.university (string, optional)
+{majors}            ← hunter.majors (list, optional)
+{graduation_year}   ← hunter.graduation_year (integer, optional)
 {level}             ← hunter.level
 {roles}             ← hunter.roles (list)
 {eligible_majors}   ← hunter.eligible_majors (list, may be empty)
@@ -64,6 +67,9 @@ After loading, validate before proceeding. Check every rule below. If **any** ru
 - `hunter.base_path` — non-empty string, should end with `/`
 
 **Optional but typed (validate if present):**
+- `hunter.university` — if present, must be a string
+- `hunter.majors` — if present, must be a list of strings
+- `hunter.graduation_year` — if present and not null, must be a 4-digit integer between 1980 and 2100
 - `hunter.sources` — if present, must be a map; each value must be `true` or `false`
 - `hunter.digest_time` — if present, must match `HH:MM` format (24h)
 - `hunter.digest_channel` — if present, must be one of: `gmail | slack | none`
@@ -120,6 +126,7 @@ Here's what I can do:
 📬 /job-digest     — send Gmail digest with today's top picks
 📊 /job-track      — add or update an application
 🗂️  /job-status     — full dashboard of all applications
+🤝 /job-network    — alumni map + personalised outreach drafts
 ⚙️  /job-setup      — update config (roles, locations, level, companies)
 
 What's first?
@@ -137,6 +144,8 @@ All files saved under `{base_path}`:
 {base_path}
 ├── tracker.json                                  ← application tracker (source of truth)
 ├── tracker.md                                    ← auto-generated view (do not edit)
+├── networking/
+│   └── alumni_map.json                           ← alumni networking data (gitignored)
 ├── scans/
 │   └── Jobs_YYYY-MM-DD.md                        ← daily scan results
 └── {company}/
@@ -190,6 +199,7 @@ All files saved under `{base_path}`:
 | `/job-prep` | Interview prep + mock interview |
 | `/job-track` | Add or update an application in the tracker |
 | `/job-status` | Summary of all active applications |
+| `/job-network` | Alumni map + personalised outreach drafts |
 
 ---
 
@@ -206,6 +216,7 @@ All files saved under `{base_path}`:
 | "Update my config" / "change my roles" | → Module 8: Config Update |
 | "Track application" / "I applied to X" / "update status" | → Module 9: Application Tracker |
 | "Show my applications" / "application summary" | → Module 10: Application Status |
+| "Find alumni" / "networking" / "who from my school works at X" | → Module 11: Alumni Networking |
 
 Chain naturally: JD paste → auto Module 2 → offer Module 5 → offer Module 3 → offer Module 4.
 
@@ -835,6 +846,24 @@ Source of truth: `{base_path}tracker.json`. `tracker.md` is a read-only view —
       "outcome": null,
       "notes": ""
     }
+  ],
+  "networking": [
+    {
+      "id": "sarah-chen-atlassian-2026",
+      "name": "Sarah Chen",
+      "company": "Atlassian",
+      "role": "Software Engineer",
+      "university": "University of Melbourne",
+      "major": "Computer Science",
+      "graduation_year": 2024,
+      "linkedin_url": "https://linkedin.com/in/sarah-chen",
+      "status": "drafted",
+      "contacted_date": null,
+      "reply_status": "not_sent",
+      "related_application_id": "atlassian-swe-intern-2026",
+      "last_message_summary": "Asked for advice about SWE internship path",
+      "notes": ""
+    }
   ]
 }
 ```
@@ -851,13 +880,22 @@ Source of truth: `{base_path}tracker.json`. `tracker.md` is a read-only view —
 - `withdrawn` — withdrew application
 - `ghosted` — no response in 4+ weeks
 
+**Networking status enum** (`networking[].status`):
+- `drafted` — message drafted, not sent
+- `sent` — user sent message manually
+- `replied` — alumni replied
+- `meeting_scheduled` — coffee chat / call scheduled
+- `referred` — referral or concrete intro offered
+- `no_reply` — no reply after follow-up window
+
 **ID generation:** lowercase hyphenated slug — `{company}-{role-keywords}-{year}`. Keep short and unique. Example: `atlassian-swe-intern-2026`, `canva-product-eng-intern-2026`.
 
 ### Tracker operations
 
 **Step 1 — Load tracker.json:**
 - Read `{base_path}tracker.json`
-- If file doesn't exist, initialise: `{"last_updated": "{today}", "applications": []}`
+- If file doesn't exist, initialise: `{"last_updated": "{today}", "applications": [], "networking": []}`
+- If an older tracker exists without `networking`, treat `networking` as an empty array and add it on next write.
 
 **Step 2 — Add or update:**
 
@@ -906,6 +944,17 @@ Sort order in tracker.md: active first (watchlist → applied → oa → intervi
 
 Always confirm: `✅ Tracker updated → {base_path}tracker.json (tracker.md regenerated)`
 
+### Networking record operations
+
+Module 11 owns `networking[]`, but Module 9 defines the storage contract.
+
+When adding or updating a networking record:
+- Find by `linkedin_url` first; fallback to `name + company` case-insensitive.
+- Preserve original profile fields (`name`, `company`, `role`, `university`, `graduation_year`) unless the user explicitly corrects them.
+- Update only interaction fields: `status`, `contacted_date`, `reply_status`, `related_application_id`, `last_message_summary`, `notes`.
+- Set `last_updated` to today.
+- Do **not** render networking rows into `tracker.md`; keep tracker.md application-focused.
+
 ---
 
 ## Module 10: Application Status
@@ -917,6 +966,7 @@ Read `{base_path}tracker.json` (not tracker.md) and present a live dashboard.
 **Step 2 — Compute stats:**
 - Total, Active (non-closed statuses), Interview (interview + final_round), Offers (offer + accepted), Closed (rejected + withdrawn + ghosted)
 - Stale: entries where applied_date is 14+ days ago and status is still `applied` or `oa`
+- Networking: count `networking[]` by status (`drafted`, `sent`, `replied`, `meeting_scheduled`, `referred`, `no_reply`)
 
 **Step 3 — Present dashboard:**
 
@@ -925,6 +975,7 @@ Read `{base_path}tracker.json` (not tracker.md) and present a live dashboard.
 
 ## Summary
 Total: {n} | Active: {n} | Interview: {n} | Offers: {n} | Closed: {n}
+Networking: Drafted {n} | Sent {n} | Replied {n} | Meetings {n} | Referrals {n}
 
 ## 🏆 Offers
 {entries with status offer or accepted — show company, role, deadline, next_step}
@@ -944,12 +995,172 @@ Total: {n} | Active: {n} | Interview: {n} | Offers: {n} | Closed: {n}
 ## 🔴 Closed
 Rejected: {n} | Withdrawn: {n} | Ghosted: {n}
 (type /job-status closed to see full list)
+
+## 🤝 Networking
+{if networking exists: show top 5 active contacts with company, status, next step; else "No alumni contacts tracked yet."}
 ```
 
 **Deadlines:** flag 🔴 any `deadline` or offer decision within 7 days.
 **Recommended next action:** one sentence based on current state (e.g. "You have 2 interviews this week — focus on prep.")
 
 If an entry has `match_score`, show it as a small indicator: `[90%]`.
+
+---
+
+## Module 11: Alumni Networking
+
+Help the user discover where similar alumni work, choose who to contact, and draft authentic outreach. This module uses `hunter.university`, `hunter.majors`, and `hunter.graduation_year` from config.
+
+**Privacy rule:** save alumni data only under `networking/`. Never write alumni names, LinkedIn URLs, or outreach notes to tracked docs.
+
+**Safety rule:** never send LinkedIn messages automatically. Draft only; the user reviews and sends manually.
+
+### Command modes
+
+| Mode | Purpose |
+|------|---------|
+| `/job-network --spike` | Validate whether LinkedIn search data is extractable in the current browser/session |
+| `/job-network --map` | Build `networking/alumni_map.json` grouped by current company |
+| `/job-network --list [company]` | Read saved map and show contact candidates |
+| `/job-network --reach {company}` | Draft personalised outreach for selected alumni |
+| `/job-network --prep {name}` | Prepare coffee chat questions and referral ask script |
+
+### Preflight
+
+Before any mode except `--list`, validate:
+- `hunter.university` exists and is non-empty
+- `hunter.majors` exists and has at least one entry
+- `hunter.graduation_year` is a valid 4-digit year
+
+If missing, stop with:
+
+```
+I need your alumni search profile first:
+- university
+- majors
+- graduation_year
+
+Run /job-setup or say "set my university to ..." and I’ll update config.yaml.
+```
+
+### `--spike` — LinkedIn extractability check
+
+Goal: decide whether Chrome/LinkedIn extraction is viable before building automation.
+
+Steps:
+1. Ask user to confirm they are logged into LinkedIn in Chrome.
+2. Build one manual search query using the first major:
+   `site:linkedin.com/in "{university}" "{major}" "{graduation_year}" "Software Engineer" Australia`
+3. If browser tooling is available, navigate to LinkedIn people search or Google results and inspect whether names, titles, companies, and URLs are visible as text.
+4. Record result in `networking/spike_report.md`.
+
+Report format:
+
+```markdown
+# LinkedIn Networking Spike — {YYYY-MM-DD}
+
+## Result
+Pass / Partial / Fail
+
+## Tested query
+{query}
+
+## Extractability
+| Field | Result | Notes |
+|-------|--------|-------|
+| Name | pass/partial/fail | |
+| Current company | pass/partial/fail | |
+| Role/title | pass/partial/fail | |
+| LinkedIn URL | pass/partial/fail | |
+
+## Decision
+- If Pass: proceed with /job-network --map
+- If Partial: use Google `site:linkedin.com/in` fallback and limit output confidence
+- If Fail: do not automate; provide manual search queries only
+```
+
+### `--map` — Alumni company map
+
+Create `networking/alumni_map.json`.
+
+Search scope:
+- University: `{university}`
+- Majors: each value in `{majors}`
+- Graduation year range: `{graduation_year - 2}` to `{graduation_year}`
+- Location bias: Australia unless user asks otherwise
+
+For each result, extract:
+- `name`
+- `current_company`
+- `current_role`
+- `graduation_year` if visible
+- `linkedin_url`
+- `source_query`
+
+Deduplicate by `linkedin_url`; fallback to lowercase `name + current_company` if URL unavailable.
+
+Output JSON:
+
+```json
+{
+  "generated_date": "YYYY-MM-DD",
+  "university": "University of Melbourne",
+  "majors": ["Computer Science", "Software Engineering"],
+  "graduation_years": [2023, 2024, 2025],
+  "total": 0,
+  "by_company": {}
+}
+```
+
+Then present the top companies by alumni count and ask which company the user wants to inspect.
+
+### `--list [company]`
+
+Read `networking/alumni_map.json`. If missing, ask user to run `/job-network --map` first.
+
+Show:
+- company
+- alumni count
+- name
+- current role
+- graduation year if known
+- contact status: untouched, drafted, sent, replied, meeting_scheduled, referred, no_reply
+
+### `--reach {company}`
+
+Read `networking/alumni_map.json`, filter to the company, and show 3-5 best candidates.
+
+For selected alumni:
+1. Inspect profile context if available.
+2. Draft a message with a real icebreaker.
+3. Keep connection request under 300 characters; InMail/email under 500 words.
+4. End with a light ask: advice, coffee chat, or a few questions. Do not directly demand a referral in the first message.
+
+After drafting, ask whether to mark the contact as `drafted` in `alumni_map.json`.
+
+If user says yes:
+- Update the matching person in `networking/alumni_map.json`:
+  - `contacted`: false
+  - `reply_status`: `drafted`
+  - `last_message_summary`: one sentence
+- Add or update the matching record in `{base_path}tracker.json` under `networking[]`:
+  - `status`: `drafted`
+  - `reply_status`: `not_sent`
+  - `contacted_date`: null
+  - `related_application_id`: best matching application at same company if one exists, otherwise null
+- Confirm: `✅ Outreach draft tracked → tracker.json networking[]`
+
+When user later says they sent, got a reply, scheduled a chat, or received a referral, update both:
+- `networking/alumni_map.json` contact fields
+- `{base_path}tracker.json` `networking[]` record
+
+### `--prep {name}`
+
+Generate:
+- 5 coffee chat questions
+- 1 intro sentence
+- 1 graceful referral ask for the end of the conversation
+- 1 thank-you follow-up message
 
 ---
 
