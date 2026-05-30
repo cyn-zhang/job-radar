@@ -128,6 +128,7 @@ Here's what I can do:
 📊 /job-track      — add or update an application
 🗂️  /job-status     — full dashboard of all applications
 🤝 /job-network    — alumni map + personalised outreach drafts
+✉️  /job-followup   — draft follow-up or thank-you email
 ⚙️  /job-setup      — update config (roles, locations, level, companies)
 
 What's first?
